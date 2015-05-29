@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class GenericLineReader {
+public class SimpleLineReader {
 	
 	private InputStream in;
 	
 	private BufferedReader reader;
 	
 	
-	public GenericLineReader(String inputPath) {
+	public SimpleLineReader(String inputPath) {
 		
 		try {
 			this.in = new FileInputStream( inputPath );
