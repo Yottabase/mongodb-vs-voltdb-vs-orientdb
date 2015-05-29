@@ -19,18 +19,28 @@ public class BenchmarkMain {
 
 	public static void main(String[] args) throws IOException {
 
+		long startTime;
+		
 		Config config = new Config();
 		Properties properties = config.getProperties();
 
 		List<Driver> drivers = initDrivers(properties);
 
+		
+		
 		for (Driver driver : drivers) {
 
+			startTime = System.currentTimeMillis();
 			driver.initializeSchema();
-
+			System.out.println(driver.getClass().getSimpleName() + "_initializeSchema: " + (System.currentTimeMillis() - startTime) + " ms");
+			
+			startTime = System.currentTimeMillis();
 			importUserDataset(properties.getProperty("dataset.user.filepath"), driver);
+			System.out.println(driver.getClass().getSimpleName() + "_importUserDataset: " + (System.currentTimeMillis() - startTime) + " ms");
+			
+			startTime = System.currentTimeMillis();
 			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), driver);
-
+			System.out.println(driver.getClass().getSimpleName() + "_importListenedTrackDataset: " + (System.currentTimeMillis() - startTime) + " ms");
 		}
 	}
 
