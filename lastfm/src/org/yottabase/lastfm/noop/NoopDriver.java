@@ -17,6 +17,7 @@ public class NoopDriver implements Driver{
 		System.out.println("gender: "+ user.getGender());
 		System.out.println("age: " + user.getAge());
 		System.out.println("country: " + user.getCountry());
+		System.out.println("signupDate: " + user.getSignupDate());
 		
 		System.out.println("==========================");
 		
