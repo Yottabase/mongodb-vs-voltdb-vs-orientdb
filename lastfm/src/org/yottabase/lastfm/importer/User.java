@@ -12,7 +12,7 @@ public class User {
 	
 	private String country;
 	
-	private Calendar registrationDate;
+	private Calendar signupDate;
 
 	public String getCode() {
 		return code;
@@ -46,12 +46,12 @@ public class User {
 		this.country = country;
 	}
 
-	public Calendar getRegistrationDate() {
-		return registrationDate;
+	public Calendar getSignupDate() {
+		return signupDate;
 	}
 
-	public void setRegistrationDate(Calendar registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setSignupDate(Calendar signupDate) {
+		this.signupDate = signupDate;
 	}
 
 	@Override

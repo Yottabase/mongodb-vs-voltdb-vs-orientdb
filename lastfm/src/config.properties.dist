@@ -1,5 +1,6 @@
 #dataset
-dataset.path=/home
+dataset.user.filepath=/
+dataset.listened_tracks.filepath=/
 
 #Noop
 noop.enabled=true
