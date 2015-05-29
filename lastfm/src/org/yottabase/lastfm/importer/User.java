@@ -2,7 +2,7 @@ package org.yottabase.lastfm.importer;
 
 import java.util.Calendar;
 
-public class Profile {
+public class User {
 	
 	private String code;
 	
