@@ -1,4 +1,4 @@
-package lastfm;
+package org.yottabase.lastfm;
 
 public class BenchmarkMain {
 
