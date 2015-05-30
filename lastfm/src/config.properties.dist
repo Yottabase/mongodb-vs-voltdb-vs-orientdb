@@ -2,6 +2,9 @@
 dataset.user.filepath=/
 dataset.listened_tracks.filepath=/
 
+#general
+supported_drivers=noop,voltdb,mongodb,orientdb
+
 #Noop
 noop.enabled=true
 noop.factory=org.yottabase.lastfm.noop.NoopDriverFactory
