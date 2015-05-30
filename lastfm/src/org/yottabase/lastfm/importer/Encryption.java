@@ -7,13 +7,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class Encryption {
 
-	public static void main(String[] args) {
-		String str = "Hora De Acordar";
-		String cry = toSHA1(str);
-
-		System.out.println(cry);
-	}
-
 	private static final String MD5 = "MD5";
 	private static final String SHA1 = "SHA-1";
 	private static final String SHA256 = "SHA-256";
