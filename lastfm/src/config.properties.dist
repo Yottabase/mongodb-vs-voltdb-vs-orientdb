@@ -7,25 +7,25 @@ supported_drivers=noop,voltdb,mongodb,orientdb
 
 #Noop
 noop.enabled=true
-noop.factory=org.yottabase.lastfm.noop.NoopDriverFactory
+noop.factory=org.yottabase.lastfm.driver.noop.NoopDriverFactory
 
 #Voltdb
 voltdb.enabled=false
-voltdb.factory=org.yottabase.lastfm.voltdb.VoltdbDriverFactory
+voltdb.factory=org.yottabase.lastfm.driver.voltdb.VoltdbDriverFactory
 voltdb.host=localhost
 voltdb.username=username
 voltdb.password=password
 
 #Mongodb
 mongodb.enabled=false
-mongodb.factory=org.yottabase.lastfm.mongodb.MongodbDriverFactory
+mongodb.factory=org.yottabase.lastfm.driver.mongodb.MongodbDriverFactory
 mongodb.host=localhost
 mongodb.username=username
 mongodb.password=password
 
 #Orientdb
 orientdb.enabled=false
-orientdb.factory=org.yottabase.lastfm.orientdb.OrientdbDriverFactory
+orientdb.factory=org.yottabase.lastfm.driver.orientdb.OrientdbDriverFactory
 orientdb.host=localhost
 orientdb.username=username
 orientdb.password=password

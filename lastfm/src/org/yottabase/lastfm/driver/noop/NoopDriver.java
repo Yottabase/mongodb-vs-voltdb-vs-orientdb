@@ -1,4 +1,4 @@
-package org.yottabase.lastfm.noop;
+package org.yottabase.lastfm.driver.noop;
 
 import org.yottabase.lastfm.core.Driver;
 import org.yottabase.lastfm.importer.ListenedTrack;

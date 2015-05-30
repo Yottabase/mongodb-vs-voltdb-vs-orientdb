@@ -1,4 +1,4 @@
-package org.yottabase.lastfm.noop;
+package org.yottabase.lastfm.driver.noop;
 
 import java.util.Properties;
 
