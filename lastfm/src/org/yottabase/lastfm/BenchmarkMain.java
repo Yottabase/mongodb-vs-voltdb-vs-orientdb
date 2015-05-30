@@ -25,14 +25,17 @@ public class BenchmarkMain {
 		
 		for (Driver driver : driverManager.getDrivers()) {
 
+			//initializeSchema
 			startTime = System.currentTimeMillis();
 			driver.initializeSchema();
 			System.out.println(driver.getClass().getSimpleName() + "_initializeSchema: " + (System.currentTimeMillis() - startTime) + " ms");
 			
+			//importUserDataset
 			startTime = System.currentTimeMillis();
 			importUserDataset(properties.getProperty("dataset.user.filepath"), driver);
 			System.out.println(driver.getClass().getSimpleName() + "_importUserDataset: " + (System.currentTimeMillis() - startTime) + " ms");
 			
+			//importListenedTrackDataset
 			startTime = System.currentTimeMillis();
 			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), driver);
 			System.out.println(driver.getClass().getSimpleName() + "_importListenedTrackDataset: " + (System.currentTimeMillis() - startTime) + " ms");
