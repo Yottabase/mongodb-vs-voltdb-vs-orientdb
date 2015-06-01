@@ -54,7 +54,7 @@ public class VoltDbDriver implements Driver{
 				user.getGender(),
 				user.getAge(),
 				user.getCountry(),
-				( user.getSignupDate() != null ) ? user.getSignupDate().getTime() : null 	
+				user.getSignupDateAsJavaDate()
 			);
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
