@@ -1,6 +1,7 @@
 package org.yottabase.lastfm.importer;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class ListenedTrack {
 	
@@ -26,6 +27,14 @@ public class ListenedTrack {
 
 	public Calendar getTime() {
 		return time;
+	}
+	
+	public Date getTimeAsJavaDate() {
+		return (time == null) ? null : time.getTime();
+	}
+	
+	public long getTimeInMillis() {
+		return (time == null) ? null : time.getTimeInMillis();
 	}
 
 	public void setTime(Calendar time) {

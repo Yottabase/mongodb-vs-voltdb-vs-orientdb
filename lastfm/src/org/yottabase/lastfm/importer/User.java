@@ -1,6 +1,7 @@
 package org.yottabase.lastfm.importer;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class User {
 	
@@ -48,6 +49,14 @@ public class User {
 
 	public Calendar getSignupDate() {
 		return signupDate;
+	}
+	
+	public Date getSignupDateAsJavaDate() {
+		return (signupDate == null) ? null : signupDate.getTime() ;
+	}
+	
+	public long getSignupDateInMillis() {
+		return (signupDate == null) ? null : signupDate.getTimeInMillis() ;
 	}
 
 	public void setSignupDate(Calendar signupDate) {
