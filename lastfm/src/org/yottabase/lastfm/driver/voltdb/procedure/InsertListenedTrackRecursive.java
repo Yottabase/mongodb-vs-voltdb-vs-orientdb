@@ -8,11 +8,11 @@ import org.voltdb.VoltProcedure;
 public class InsertListenedTrackRecursive extends VoltProcedure{
 
 	final SQLStmt insert = new SQLStmt(
-            "INSERT INTO ListenedTrack (code, time, trackCode, userCode) VALUES (?, ?, ?, ?);");
+            "INSERT INTO ListenedTrack (time, trackCode, userCode) VALUES (?, ?, ?);");
 	
 	public long run (String userCode, Date time, String artistCode, String artistName, String trackCode, String trackName){
 		
-		voltQueueSQL(insert, EXPECT_SCALAR_MATCH(1),  userCode + trackCode, time, trackCode, userCode);
+		voltQueueSQL(insert, EXPECT_SCALAR_MATCH(1), time, trackCode, userCode);
 		voltExecuteSQL(true);
 		
 		return 0;

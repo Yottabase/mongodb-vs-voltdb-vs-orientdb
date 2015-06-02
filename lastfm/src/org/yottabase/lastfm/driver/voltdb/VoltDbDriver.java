@@ -26,41 +26,38 @@ public class VoltDbDriver implements Driver{
 	public void initializeSchema() {
 		
 		String dqlClean = new StringBuilder()
-		//elimina tabelle ed indici
-		.append("DROP TABLE User IF EXISTS; ")
-		.append("DROP INDEX User_Index IF EXISTS; ")
-		.append("DROP TABLE Artist IF EXISTS; ")
-		.append("DROP INDEX Artist_Index IF EXISTS; ")
-		.append("DROP TABLE Track IF EXISTS; ")
-		.append("DROP INDEX Track_Index IF EXISTS; ")
-		.append("DROP TABLE ListenedTrack IF EXISTS; ")
-		.append("DROP INDEX ListenedTrack_Index IF EXISTS; ")
+		//pulisce il database
 		.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
+		.append("DROP TABLE User IF EXISTS; ")
+		.append("DROP TABLE Artist IF EXISTS; ")
+		.append("DROP TABLE Track IF EXISTS; ")
+		.append("DROP TABLE ListenedTrack IF EXISTS; ")
+		
 		.toString();
 		
 		String dql = new StringBuilder()
 			//crea tabella User
 			.append("CREATE TABLE User ( ")
 			.append("Code VARCHAR NOT NULL, Gender VARCHAR(1), Age TINYINT, Country VARCHAR, SignupDate TIMESTAMP,")
-			.append("CONSTRAINT User_Index UNIQUE (Code), PRIMARY KEY (Code)")
+			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
 			//crea tabella Artist
 			.append("CREATE TABLE Artist ( ")
 			.append("Code VARCHAR NOT NULL, Name VARCHAR,")
-			.append("CONSTRAINT Artist_Index UNIQUE (Code), PRIMARY KEY (Code)")
+			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
 			//crea tabella Track
 			.append("CREATE TABLE Track ( ")
 			.append("Code VARCHAR NOT NULL, Name VARCHAR, ArtistCode VARCHAR,")
-			.append("CONSTRAINT Track_Index UNIQUE (Code), PRIMARY KEY (Code)")
+			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
 			//crea tabella ListenedTrack
 			.append("CREATE TABLE ListenedTrack ( ")
-			.append("Code VARCHAR NOT NULL, Time TIMESTAMP, TrackCode VARCHAR, UserCode VARCHAR,")
-			.append("CONSTRAINT ListenedTrack_Index UNIQUE (Code), PRIMARY KEY (Code)")
+			.append("Time TIMESTAMP, TrackCode VARCHAR, UserCode VARCHAR,")
+			.append("PRIMARY KEY (Time, TrackCode, UserCode)")
 			.append(");")
 			
 			.toString();
