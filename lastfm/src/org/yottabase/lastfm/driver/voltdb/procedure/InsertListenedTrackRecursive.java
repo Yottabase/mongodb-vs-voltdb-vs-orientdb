@@ -19,13 +19,11 @@ public class InsertListenedTrackRecursive extends VoltProcedure{
 		voltQueueSQL(selectArtist, EXPECT_ZERO_OR_ONE_ROW, trackCode);
 		if(voltExecuteSQL()[0].getRowCount() == 0 ){
 			voltQueueSQL(insertArtist, EXPECT_SCALAR_MATCH(1), trackCode, trackName);
-			voltExecuteSQL();
 		}
 		
 		voltQueueSQL(selectTrack, EXPECT_ZERO_OR_ONE_ROW, trackCode);
 		if(voltExecuteSQL()[0].getRowCount() == 0 ){
 			voltQueueSQL(insertTrack, EXPECT_SCALAR_MATCH(1), trackCode, trackName, artistCode);
-			voltExecuteSQL();
 		}
 		
 		voltQueueSQL(insertListenedTrack, EXPECT_SCALAR_MATCH(1), time, trackCode, userCode);
