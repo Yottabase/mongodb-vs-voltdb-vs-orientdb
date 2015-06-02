@@ -1,15 +1,20 @@
 package org.yottabase.lastfm.driver.voltdb;
 
+import java.io.File;
 import java.io.IOException;
+
 import org.voltdb.client.Client;
 import org.voltdb.client.ProcCallException;
 import org.yottabase.lastfm.core.Driver;
+import org.yottabase.lastfm.driver.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
 public class VoltDbDriver implements Driver{
 
 	private static final String PROCEDURE_ADHOC = "@AdHoc";
+	
+	private final File procedureJar = new File("resources/voltdbProcedure.jar");
 	
 	private Client client;
 	
@@ -30,6 +35,7 @@ public class VoltDbDriver implements Driver{
 		.append("DROP INDEX Track_Index IF EXISTS; ")
 		.append("DROP TABLE ListenedTrack IF EXISTS; ")
 		.append("DROP INDEX ListenedTrack_Index IF EXISTS; ")
+		.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
 		.toString();
 		
 		String dql = new StringBuilder()
@@ -59,10 +65,18 @@ public class VoltDbDriver implements Driver{
 			
 			.toString();
 		
+		String createProcedures = new StringBuilder()
+			//crea procedura
+			.append("CREATE PROCEDURE FROM CLASS " + InsertListenedTrackRecursive.class.getCanonicalName() + ";")
+			
+			.toString();
+		
 		try {
 			
 			this.client.callProcedure( PROCEDURE_ADHOC,	dqlClean);
 			this.client.callProcedure( PROCEDURE_ADHOC,	dql);
+			this.client.updateClasses(procedureJar, "");
+			this.client.callProcedure( PROCEDURE_ADHOC,	createProcedures);
 			
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
@@ -88,8 +102,19 @@ public class VoltDbDriver implements Driver{
 
 	@Override
 	public void insertListenedTrack(ListenedTrack listenedTrack) {
-		// TODO Auto-generated method stub
-		
+		try {
+			this.client.callProcedure(
+				"InsertListenedTrackRecursive", 
+				listenedTrack.getCode(),
+				listenedTrack.getTimeAsJavaDate(),
+				listenedTrack.getArtistCode(),
+				listenedTrack.getArtistName(),
+				listenedTrack.getTrackCode(),
+				listenedTrack.getTrackName()
+			);
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
-
+	
 }
