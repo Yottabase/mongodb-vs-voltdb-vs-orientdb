@@ -5,6 +5,7 @@ import org.yottabase.lastfm.core.Driver;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
@@ -26,13 +27,12 @@ public class MongodbDriver implements Driver {
 
 	@Override
 	public void insertUser(User user) {
-
 		db.getCollection(COLLECTIONUSERS).insertOne(
 				new Document("code", user.getCode())
 						.append("gender", user.getGender())
 						.append("age", user.getAge())
 						.append("country", user.getCountry())
-						//.append("singupDate", user.getSignupDate())
+						.append("singupDate", user.getSignupDate())
 				);
 	}
 
@@ -45,7 +45,20 @@ public class MongodbDriver implements Driver {
 						.append("artistId", listenedTrack.getArtistCode())
 						.append("artistName", listenedTrack.getArtistName())
 						.append("trackId", listenedTrack.getTrackCode())
-						.append("trackName", listenedTrack.getTrackName()));
+						.append("trackName", listenedTrack.getTrackName())
+						);
+
+		
+		/**
+		 * creo un array di brani ascolati
+		 */
+		BasicDBObject trackObject = new BasicDBObject();
+		trackObject.put("trackId", listenedTrack.getTrackCode());
+		
+
+		db.getCollection(COLLECTIONUSERS).updateOne(new BasicDBObject("code", listenedTrack.getCode()), new BasicDBObject(
+                "$push", new BasicDBObject("tracks", trackObject)));
+		
 	}
 
 }
