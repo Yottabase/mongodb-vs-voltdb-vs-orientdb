@@ -27,14 +27,13 @@ public class MongodbDriver implements Driver {
 
 	@Override
 	public void insertUser(User user) {
-		System.out.println(user.getSignupDate().getTime());
+
 		db.getCollection(COLLECTIONUSERS).insertOne(
 				new Document("code", user.getCode())
 						.append("gender", user.getGender())
 						.append("age", user.getAge())
 						.append("country", user.getCountry())
-						.append("singupDate", user.getSignupDate().getTimeInMillis())
-				);
+						.append("singupDate", user.getSignupDateAsJavaDate()));
 	}
 
 	@Override
@@ -42,24 +41,23 @@ public class MongodbDriver implements Driver {
 
 		db.getCollection(COLLECTIONTRACKS).insertOne(
 				new Document("code", listenedTrack.getCode())
-						.append("time",listenedTrack.getTime().getTimeInMillis())
+						.append("time", listenedTrack.getTimeAsJavaDate())
 						.append("artistId", listenedTrack.getArtistCode())
 						.append("artistName", listenedTrack.getArtistName())
 						.append("trackId", listenedTrack.getTrackCode())
-						.append("trackName", listenedTrack.getTrackName())
-						);
+						.append("trackName", listenedTrack.getTrackName()));
 
-		
 		/**
-		 * creo un array di brani ascolati
+		 * associo il brano all'utente che lo ha ascoltato
 		 */
 		BasicDBObject trackObject = new BasicDBObject();
 		trackObject.put("trackId", listenedTrack.getTrackCode());
-		
 
-		db.getCollection(COLLECTIONUSERS).updateOne(new BasicDBObject("code", listenedTrack.getCode()), new BasicDBObject(
-                "$push", new BasicDBObject("tracks", trackObject)));
-		
+		db.getCollection(COLLECTIONUSERS).updateOne(
+				new BasicDBObject("code", listenedTrack.getCode()),
+				new BasicDBObject("$push", new BasicDBObject("tracks",
+						trackObject)));
+
 	}
 
 }
