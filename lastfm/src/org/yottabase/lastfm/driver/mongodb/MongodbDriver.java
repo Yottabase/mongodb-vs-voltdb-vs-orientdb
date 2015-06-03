@@ -27,12 +27,13 @@ public class MongodbDriver implements Driver {
 
 	@Override
 	public void insertUser(User user) {
+		System.out.println(user.getSignupDate().getTime());
 		db.getCollection(COLLECTIONUSERS).insertOne(
 				new Document("code", user.getCode())
 						.append("gender", user.getGender())
 						.append("age", user.getAge())
 						.append("country", user.getCountry())
-						.append("singupDate", user.getSignupDate())
+						.append("singupDate", user.getSignupDate().getTimeInMillis())
 				);
 	}
 
