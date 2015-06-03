@@ -15,6 +15,8 @@ import org.yottabase.lastfm.importer.UserRecordManager;
 
 public class BenchmarkMain {
 
+	private static final String SEPARATOR = "\t";
+	
 	public static void main(String[] args) throws IOException {
 
 		long startTime;
@@ -25,20 +27,22 @@ public class BenchmarkMain {
 		
 		for (Driver driver : driverManager.getDrivers()) {
 
+			System.out.println("Driver" + SEPARATOR + "Method" + SEPARATOR + "Time (ms)");
+			
 			//initializeSchema
 			startTime = System.currentTimeMillis();
 			driver.initializeSchema();
-			System.out.println(driver.getClass().getSimpleName() + "_initializeSchema: " + (System.currentTimeMillis() - startTime) + " ms");
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "initializeSchema" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//importUserDataset
 			startTime = System.currentTimeMillis();
 			importUserDataset(properties.getProperty("dataset.user.filepath"), driver);
-			System.out.println(driver.getClass().getSimpleName() + "_importUserDataset: " + (System.currentTimeMillis() - startTime) + " ms");
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importUserDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//importListenedTrackDataset
 			startTime = System.currentTimeMillis();
 			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), driver);
-			System.out.println(driver.getClass().getSimpleName() + "_importListenedTrackDataset: " + (System.currentTimeMillis() - startTime) + " ms");
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
 		}
 	}	
 
