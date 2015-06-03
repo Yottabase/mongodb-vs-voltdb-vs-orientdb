@@ -26,14 +26,14 @@ public class VoltDbDriver implements Driver{
 	public void initializeSchema() {
 		
 		String dqlClean = new StringBuilder()
-		//pulisce il database
-		.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
-		.append("DROP TABLE User IF EXISTS; ")
-		.append("DROP TABLE Artist IF EXISTS; ")
-		.append("DROP TABLE Track IF EXISTS; ")
-		.append("DROP TABLE ListenedTrack IF EXISTS; ")
+			//pulisce il database
+			.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
+			.append("DROP TABLE User IF EXISTS; ")
+			.append("DROP TABLE Artist IF EXISTS; ")
+			.append("DROP TABLE Track IF EXISTS; ")
+			.append("DROP TABLE ListenedTrack IF EXISTS; ")
 		
-		.toString();
+			.toString();
 		
 		String dql = new StringBuilder()
 			//crea tabella User
