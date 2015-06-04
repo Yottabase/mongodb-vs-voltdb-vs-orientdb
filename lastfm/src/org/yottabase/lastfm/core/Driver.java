@@ -5,7 +5,7 @@ import org.yottabase.lastfm.importer.User;
 
 public abstract class Driver {
 	
-	private OutputWriter writer = new ConsoleOutputWriter();
+	protected OutputWriter writer = new ConsoleOutputWriter();
 	
 	public OutputWriter getWriter() {
 		return writer;

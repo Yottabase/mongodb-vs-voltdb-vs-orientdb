@@ -39,13 +39,13 @@ public class NoopDriver extends Driver{
 
 	@Override
 	public void countArtists() {
-		this.getWriter().write("10");
+		this.writer.write("10");
 		
 	}
 
 	@Override
 	public void countTracks() {
-		this.getWriter().write("10");
+		this.writer.write("10");
 		
 	}
 
