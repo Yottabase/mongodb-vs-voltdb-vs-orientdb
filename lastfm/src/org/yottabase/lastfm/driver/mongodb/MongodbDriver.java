@@ -11,7 +11,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 
-public class MongodbDriver implements Driver {
+public class MongodbDriver extends Driver {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
@@ -123,6 +123,66 @@ public class MongodbDriver implements Driver {
 				new BasicDBObject("$push", new BasicDBObject("tracks",
 						ArtistTracks)));
 
+	}
+
+	@Override
+	public void countArtists() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countTracks() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countUsers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countEntities() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksListenedTogether(int n) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
