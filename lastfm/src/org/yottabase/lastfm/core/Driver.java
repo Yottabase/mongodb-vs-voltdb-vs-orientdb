@@ -3,56 +3,66 @@ package org.yottabase.lastfm.core;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
-public interface Driver {
+public abstract class Driver {
 	
+	private OutputWriter writer = new ConsoleOutputWriter();
+	
+	public OutputWriter getWriter() {
+		return writer;
+	}
+
+	public void setWriter(OutputWriter writer) {
+		this.writer = writer;
+	}
+
 	/**
 	 * Inizializza il database 
 	 */
-	public void initializeSchema();
+	public abstract void initializeSchema();
 	
 	/**
 	 * Aggiunge un profilo al database
 	 * @param user
 	 */
-	public void insertUser(User user);
+	public abstract void insertUser(User user);
 	
 	/**
 	 * Aggiunge una traccia ascoltata al database
 	 * @param listenedTrack
 	 */
-	public void insertListenedTrack(ListenedTrack listenedTrack);
+	public abstract void insertListenedTrack(ListenedTrack listenedTrack);
 	
 	/**
 	 * Conta il numero di artisti
 	 */
-	public void countArtists();
+	public abstract void countArtists();
 	
 	/**
 	 * Conta il numero di tracce
 	 */
-	public void countTracks();
+	public abstract void countTracks();
 	
 	/**
 	 * Conta il numero di utenti
 	 */
-	public void countUsers();
+	public abstract void countUsers();
 	
 	/**
 	 * Conta il numero complessivo di utenti, tracce ed artisti
 	 */
-	public void countEntities();
+	public abstract void countEntities();
 	
 	/**
 	 * Numero di canzoni mediamente ascoltate da un utente
 	 * @param uniqueTrack specifica se si considerano solo ascolti di brani diversi
 	 */
-	public void averageNumberListenedTracksPerUser(boolean uniqueTrack);
+	public abstract void averageNumberListenedTracksPerUser(boolean uniqueTrack);
 	
 	/**
 	 * Numero di artisti mediamente ascoltati da un utente
 	 * @param uniqueTrack specifica se si considerano solo ascolti di brani diversi
 	 */
-	public void averageNumberSungTracksPerArtist(boolean uniqueTrack);
+	public abstract void averageNumberSungTracksPerArtist(boolean uniqueTrack);
 	
 	/**
 	 * Gli utenti che hanno ascoltato più/meno canzoni
@@ -60,7 +70,7 @@ public interface Driver {
 	 * @param top specifica il tipo di ordinamento (top->ASC, !top->DESC)
 	 * @param uniqueTrack specifica se si considerano solo ascolti di brani diversi
 	 */
-	public void usersChart(int n, boolean top, boolean uniqueTrack);
+	public abstract void usersChart(int n, boolean top, boolean uniqueTrack);
 	
 	/**
 	 * Le tracce più/meno ascoltate
@@ -68,7 +78,7 @@ public interface Driver {
 	 * @param top specifica il tipo di ordinamento (top->ASC, !top->DESC)
 	 * @param uniqueTracks specifica se si considerano solo ascolti di brani diversi
 	 */
-	public void tracksChart(int n, boolean top, boolean uniqueTracks);
+	public abstract void tracksChart(int n, boolean top, boolean uniqueTracks);
 	
 	/**
 	 * Gli artisti più/meno ascoltati
@@ -76,12 +86,12 @@ public interface Driver {
 	 * @param top specifica il tipo di ordinamento (top->ASC, !top->DESC)
 	 * @param uniqueTracks specifica se si considerano solo ascolti di brani diversi
 	 */
-	public void artistsChart(int n, boolean top, boolean uniqueTracks);
+	public abstract void artistsChart(int n, boolean top, boolean uniqueTracks);
 	
 	/**
 	 * Le top n tracce più ascoltate insieme
 	 */
-	public void tracksListenedTogether(int n);
+	public abstract void tracksListenedTogether(int n);
 	
 	//TODO query con data
 	

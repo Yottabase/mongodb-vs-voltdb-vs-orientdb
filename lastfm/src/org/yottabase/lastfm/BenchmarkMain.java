@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.yottabase.lastfm.core.Config;
+import org.yottabase.lastfm.core.ConsoleOutputWriter;
 import org.yottabase.lastfm.core.Driver;
 import org.yottabase.lastfm.core.DriverManager;
+import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.importer.LineReader;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.ListenedTrackRecordManager;
@@ -20,14 +22,17 @@ public class BenchmarkMain {
 	public static void main(String[] args) throws IOException {
 
 		long startTime;
+		OutputWriter writer = new ConsoleOutputWriter();
 		
 		Config config = new Config();
 		Properties properties = config.getProperties();
 		DriverManager driverManager = new DriverManager(properties);
 		
 		for (Driver driver : driverManager.getDrivers()) {
-
+			
 			System.out.println("Driver" + SEPARATOR + "Method" + SEPARATOR + "Time (ms)");
+			
+			driver.setWriter(writer);
 			
 			//initializeSchema
 			startTime = System.currentTimeMillis();
@@ -43,6 +48,37 @@ public class BenchmarkMain {
 			startTime = System.currentTimeMillis();
 			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), driver);
 			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			//countArtists
+			startTime = System.currentTimeMillis();
+			driver.countArtists();
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countArtists" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			//countTracks
+			startTime = System.currentTimeMillis();
+			driver.countTracks();
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countTracks" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			//countUsers
+			startTime = System.currentTimeMillis();
+			driver.countUsers();
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countUsers" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			//countEntities
+			startTime = System.currentTimeMillis();
+			driver.countEntities();
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countEntities" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			//averageNumberListenedTracksPerUserUnique
+			startTime = System.currentTimeMillis();
+			driver.averageNumberListenedTracksPerUser(true);
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			//averageNumberListenedTracksPerUserNotUnique
+			startTime = System.currentTimeMillis();
+			driver.averageNumberListenedTracksPerUser(false);
+			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUserNotUnique" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
 		}
 	}	
 

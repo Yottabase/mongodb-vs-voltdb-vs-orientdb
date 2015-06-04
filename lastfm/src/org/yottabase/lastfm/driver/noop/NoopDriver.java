@@ -4,7 +4,7 @@ import org.yottabase.lastfm.core.Driver;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
-public class NoopDriver implements Driver{
+public class NoopDriver extends Driver{
 
 	@Override
 	public void initializeSchema() {
@@ -34,6 +34,66 @@ public class NoopDriver implements Driver{
 		System.out.println("trackName: " + listenedTrack.getTrackName());
 		
 		System.out.println("==========================");
+		
+	}
+
+	@Override
+	public void countArtists() {
+		this.getWriter().write("10");
+		
+	}
+
+	@Override
+	public void countTracks() {
+		this.getWriter().write("10");
+		
+	}
+
+	@Override
+	public void countUsers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countEntities() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksListenedTogether(int n) {
+		// TODO Auto-generated method stub
 		
 	}
 	
