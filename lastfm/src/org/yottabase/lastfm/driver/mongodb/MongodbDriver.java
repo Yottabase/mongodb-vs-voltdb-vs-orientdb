@@ -6,7 +6,6 @@ import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
@@ -77,19 +76,13 @@ public class MongodbDriver implements Driver {
 		 */
 		iterable = db.getCollection(COLLECTIONTRACKS).find(
 				new Document("trackId", listenedTrack.getTrackCode()));
-
-		iterable.forEach(new Block<Document>() {
-			@Override
-			public void apply(final Document document) {
-				trackDuplicate = true;
-			}
-		});
+		
+		if( iterable.first() != null )
+			trackDuplicate = true;
 
 		if (!trackDuplicate) {
-			db.getCollection(COLLECTIONTRACKS).insertOne(
-					new Document("trackId", listenedTrack.getTrackCode())
-							.append("trackName", listenedTrack.getTrackName()));
-
+			db.getCollection(COLLECTIONTRACKS).insertOne( new Document("trackId", listenedTrack.getTrackCode() )
+															.append("trackName", listenedTrack.getTrackName()));
 		}
 
 		/*
@@ -98,19 +91,13 @@ public class MongodbDriver implements Driver {
 		iterable = db.getCollection(COLLECTIONARTISTS).find(
 				new Document("artistId", listenedTrack.getArtistCode()));
 
-		iterable.forEach(new Block<Document>() {
-			@Override
-			public void apply(final Document document) {
+		if( iterable.first() != null )
 				artistDuplicate = true;
-			}
-		});
+
 
 		if (!artistDuplicate) {
-			db.getCollection(COLLECTIONARTISTS)
-					.insertOne(
-							new Document("artistId", listenedTrack
-									.getArtistCode()).append("artistName",
-									listenedTrack.getArtistName()));
+			db.getCollection(COLLECTIONARTISTS).insertOne( new Document("artistId", listenedTrack.getArtistCode())
+															.append("artistName", listenedTrack.getArtistName()));
 		}
 
 		/*
