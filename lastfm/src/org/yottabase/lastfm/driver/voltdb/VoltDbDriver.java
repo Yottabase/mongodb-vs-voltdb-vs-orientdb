@@ -10,7 +10,7 @@ import org.yottabase.lastfm.driver.voltdb.procedure.InsertListenedTrackRecursive
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
-public class VoltDbDriver implements Driver{
+public class VoltDbDriver extends Driver{
 
 	private static final String PROCEDURE_ADHOC = "@AdHoc";
 	
@@ -26,14 +26,14 @@ public class VoltDbDriver implements Driver{
 	public void initializeSchema() {
 		
 		String dqlClean = new StringBuilder()
-		//pulisce il database
-		.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
-		.append("DROP TABLE User IF EXISTS; ")
-		.append("DROP TABLE Artist IF EXISTS; ")
-		.append("DROP TABLE Track IF EXISTS; ")
-		.append("DROP TABLE ListenedTrack IF EXISTS; ")
+			//pulisce il database
+			.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
+			.append("DROP TABLE User IF EXISTS; ")
+			.append("DROP TABLE Artist IF EXISTS; ")
+			.append("DROP TABLE Track IF EXISTS; ")
+			.append("DROP TABLE ListenedTrack IF EXISTS; ")
 		
-		.toString();
+			.toString();
 		
 		String dql = new StringBuilder()
 			//crea tabella User
@@ -112,6 +112,66 @@ public class VoltDbDriver implements Driver{
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void countArtists() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countTracks() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countUsers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countEntities() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksListenedTogether(int n) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
