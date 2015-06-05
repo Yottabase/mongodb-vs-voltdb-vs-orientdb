@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.yottabase.lastfm.core.Config;
-import org.yottabase.lastfm.core.ConsoleOutputWriter;
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeManager;
 import org.yottabase.lastfm.core.OutputWriter;
+import org.yottabase.lastfm.core.OutputWriterFactory;
 import org.yottabase.lastfm.importer.LineReader;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.ListenedTrackRecordManager;
@@ -22,16 +22,18 @@ public class BenchmarkMain {
 	public static void main(String[] args) throws IOException {
 
 		long startTime;
-		OutputWriter writer = new ConsoleOutputWriter();
 		
 		Config config = new Config();
 		Properties properties = config.getProperties();
 		FacadeManager facadeManager = new FacadeManager(properties);
 		
+		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
+		
+		System.out.println("Facade" + SEPARATOR + "Method" + SEPARATOR + "Time (ms)");
+		
 		for (Facade facade : facadeManager.getFacades()) {
 			
-			System.out.println("Facade" + SEPARATOR + "Method" + SEPARATOR + "Time (ms)");
-			
+			OutputWriter writer = outputWriterFactory.createService(properties, facade.getClass().getSimpleName() + "_output.txt");
 			facade.setWriter(writer);
 			
 			//initializeSchema
@@ -41,12 +43,12 @@ public class BenchmarkMain {
 			
 			//importUserDataset
 			startTime = System.currentTimeMillis();
-			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
+//			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
 			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importUserDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//importListenedTrackDataset
 			startTime = System.currentTimeMillis();
-			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
+//			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
 			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//countArtists
@@ -79,6 +81,7 @@ public class BenchmarkMain {
 			facade.averageNumberListenedTracksPerUser(false);
 			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUserNotUnique" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
+			writer.close();
 		}
 	}	
 

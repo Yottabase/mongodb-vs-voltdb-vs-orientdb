@@ -2,6 +2,10 @@
 dataset.user.filepath=/
 dataset.listened_tracks.filepath=/
 
+#output.type=console
+output.type=filesystem
+output.folder=/tmp
+
 #general
 supported_facades==noop,voltdb,mongodb,orientdb
 

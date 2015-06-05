@@ -22,12 +22,17 @@ public class FacadeManager {
 	}
 
 	public List<Facade> getFacades(){
+		
 		String[] facadesName = properties.getProperty("supported_facades").split(",");
 
 		List<Facade> facades = new ArrayList<Facade>();
 
 		for (String facadeName : facadesName) {
-			facades.add(this.getFacade(facadeName));
+			String enabledFlagKey = facadeName + ".enabled";
+		
+			if (properties.get(enabledFlagKey).equals("true")) {
+				facades.add(this.getFacade(facadeName));
+			}
 		}
 
 		return facades;
@@ -36,24 +41,22 @@ public class FacadeManager {
 	public Facade getFacade(String facadeName){
 		Facade facade = null;
 		
-		String enabledFlagKey = facadeName + ".enabled";
+		
 		String facadeFactoryKey = facadeName + ".factory";
 
-		if (properties.get(enabledFlagKey).equals("true")) {
+		String factoryClassName = properties
+				.getProperty(facadeFactoryKey);
 
-			String factoryClassName = properties
-					.getProperty(facadeFactoryKey);
+		try {
+			FacadeFactory facadeFactory = (FacadeFactory) Class
+					.forName(factoryClassName).newInstance();
+			facade = facadeFactory.createService(properties);
 
-			try {
-				FacadeFactory facadeFactory = (FacadeFactory) Class
-						.forName(factoryClassName).newInstance();
-				facade = facadeFactory.createService(properties);
-
-			} catch (InstantiationException | IllegalAccessException
-					| ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		
 		return facade;
 	}
 

@@ -9,6 +9,7 @@ public class NoopFacade extends Facade{
 	@Override
 	public void initializeSchema() {
 		System.out.println("crea schema");
+		this.writer.write("prova");
 	}
 	
 	@Override

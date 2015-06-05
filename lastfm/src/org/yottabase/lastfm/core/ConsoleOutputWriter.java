@@ -12,4 +12,8 @@ public class ConsoleOutputWriter implements OutputWriter {
 		
 	}
 
+	@Override
+	public void close() {
+	}
+
 }
