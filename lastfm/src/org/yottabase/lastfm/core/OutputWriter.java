@@ -4,5 +4,5 @@ public interface OutputWriter {
 	
 	public void write(String... fields);
 	
-	
+	public void close();
 }

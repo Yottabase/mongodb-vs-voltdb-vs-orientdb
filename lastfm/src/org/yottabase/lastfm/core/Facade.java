@@ -3,7 +3,7 @@ package org.yottabase.lastfm.core;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
-public abstract class Driver {
+public abstract class Facade {
 	
 	protected OutputWriter writer = new ConsoleOutputWriter();
 	

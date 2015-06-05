@@ -1,7 +1,7 @@
 package org.yottabase.lastfm.driver.mongodb;
 
 import org.bson.Document;
-import org.yottabase.lastfm.core.Driver;
+import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
@@ -13,7 +13,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 
 
-public class MongodbDriver extends Driver {
+public class MongodbDriver extends Facade {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
