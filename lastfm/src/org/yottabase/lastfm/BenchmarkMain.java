@@ -21,6 +21,8 @@ public class BenchmarkMain {
 	
 	public static void main(String[] args) throws IOException {
 
+		int n = 10;
+		
 		long startTime;
 		
 		Config config = new Config();
@@ -36,50 +38,133 @@ public class BenchmarkMain {
 			OutputWriter writer = outputWriterFactory.createService(properties, facade.getClass().getSimpleName() + "_output.txt");
 			facade.setWriter(writer);
 			
-			//initializeSchema
 			startTime = System.currentTimeMillis();
 			facade.initializeSchema();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "initializeSchema" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "initializeSchema()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//importUserDataset
+			
+			
 			startTime = System.currentTimeMillis();
-//			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importUserDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importUserDataset()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//importListenedTrackDataset
+			
+			
 			startTime = System.currentTimeMillis();
-//			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//countArtists
+			
+			
 			startTime = System.currentTimeMillis();
 			facade.countArtists();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countArtists" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countArtists()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//countTracks
+			
+			
 			startTime = System.currentTimeMillis();
 			facade.countTracks();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countTracks" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countTracks()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//countUsers
+			
+			
 			startTime = System.currentTimeMillis();
 			facade.countUsers();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countUsers" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countUsers()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//countEntities
+			
+			
 			startTime = System.currentTimeMillis();
 			facade.countEntities();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countEntities" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countEntities()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//averageNumberListenedTracksPerUserUnique
+			
+			
 			startTime = System.currentTimeMillis();
 			facade.averageNumberListenedTracksPerUser(true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser(true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
-			//averageNumberListenedTracksPerUserNotUnique
+			
+			
 			startTime = System.currentTimeMillis();
 			facade.averageNumberListenedTracksPerUser(false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUserNotUnique" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser(false)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			
+			
+			startTime = System.currentTimeMillis();
+			facade.averageNumberSungTracksPerArtist(true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberSungTracksPerArtist(true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			
+			
+			startTime = System.currentTimeMillis();
+			facade.averageNumberSungTracksPerArtist(false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberSungTracksPerArtist(false)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			
+			
+			//usersChart
+			startTime = System.currentTimeMillis();
+			facade.usersChart(n, true, true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, true, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			startTime = System.currentTimeMillis();
+			facade.usersChart(n, false, true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, false, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+
+			startTime = System.currentTimeMillis();
+			facade.usersChart(n, true, false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, true, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			
+			startTime = System.currentTimeMillis();
+			facade.usersChart(n, false, false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, false, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			
+			
+			//tracksUsers
+			startTime = System.currentTimeMillis();
+			facade.tracksChart(n, true, true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, true, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			startTime = System.currentTimeMillis();
+			facade.tracksChart(n, false, true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, false, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+
+			startTime = System.currentTimeMillis();
+			facade.tracksChart(n, true, false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, true, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			
+			startTime = System.currentTimeMillis();
+			facade.tracksChart(n, false, false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, false, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+
+			
+			
+			//artistsChart
+			startTime = System.currentTimeMillis();
+			facade.artistsChart(n, true, true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, true, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			
+			startTime = System.currentTimeMillis();
+			facade.artistsChart(n, false, true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, false, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+
+			startTime = System.currentTimeMillis();
+			facade.artistsChart(n, true, false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, true, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			
+			startTime = System.currentTimeMillis();
+			facade.artistsChart(n, false, false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, false, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+
+			
+			
+			//tracksListenedTogether
+			startTime = System.currentTimeMillis();
+			facade.tracksListenedTogether(n);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n)" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			writer.close();
 		}
