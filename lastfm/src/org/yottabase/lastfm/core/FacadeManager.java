@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class DriverManager {
+public class FacadeManager {
 	
 	private Properties properties;
 	
-	public DriverManager(Properties properties) {
+	public FacadeManager(Properties properties) {
 		super();
 		this.properties = properties;
 	}
@@ -21,26 +21,26 @@ public class DriverManager {
 		this.properties = properties;
 	}
 
-	public List<Driver> getDrivers(){
-		String[] driversName = properties.getProperty("supported_drivers").split(",");
+	public List<Facade> getFacades(){
+		String[] facadesName = properties.getProperty("supported_facades").split(",");
 
-		List<Driver> drivers = new ArrayList<Driver>();
+		List<Facade> facades = new ArrayList<Facade>();
 
-		for (String driverName : driversName) {
+		for (String facadeName : facadesName) {
 
-			String enabledFlagKey = driverName + ".enabled";
-			String driverFactoryKey = driverName + ".factory";
+			String enabledFlagKey = facadeName + ".enabled";
+			String facadeFactoryKey = facadeName + ".factory";
 
 			if (properties.get(enabledFlagKey).equals("true")) {
 
 				String factoryClassName = properties
-						.getProperty(driverFactoryKey);
+						.getProperty(facadeFactoryKey);
 
 				try {
-					DriverFactory driverFactory = (DriverFactory) Class
+					FacadeFactory facadeFactory = (FacadeFactory) Class
 							.forName(factoryClassName).newInstance();
-					Driver driver = driverFactory.createService(properties);
-					drivers.add(driver);
+					Facade facade = facadeFactory.createService(properties);
+					facades.add(facade);
 
 				} catch (InstantiationException | IllegalAccessException
 						| ClassNotFoundException e) {
@@ -49,7 +49,7 @@ public class DriverManager {
 			}
 		}
 
-		return drivers;
+		return facades;
 	}
 
 }

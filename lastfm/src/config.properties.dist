@@ -3,7 +3,7 @@ dataset.user.filepath=/
 dataset.listened_tracks.filepath=/
 
 #general
-supported_drivers=noop,voltdb,mongodb,orientdb
+supported_facades==noop,voltdb,mongodb,orientdb
 
 #Noop
 noop.enabled=true

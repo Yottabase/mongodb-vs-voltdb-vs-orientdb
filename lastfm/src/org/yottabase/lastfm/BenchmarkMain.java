@@ -5,8 +5,8 @@ import java.util.Properties;
 
 import org.yottabase.lastfm.core.Config;
 import org.yottabase.lastfm.core.ConsoleOutputWriter;
-import org.yottabase.lastfm.core.Driver;
-import org.yottabase.lastfm.core.DriverManager;
+import org.yottabase.lastfm.core.Facade;
+import org.yottabase.lastfm.core.FacadeManager;
 import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.importer.LineReader;
 import org.yottabase.lastfm.importer.ListenedTrack;
@@ -26,63 +26,63 @@ public class BenchmarkMain {
 		
 		Config config = new Config();
 		Properties properties = config.getProperties();
-		DriverManager driverManager = new DriverManager(properties);
+		FacadeManager facadeManager = new FacadeManager(properties);
 		
-		for (Driver driver : driverManager.getDrivers()) {
+		for (Facade facade : facadeManager.getFacades()) {
 			
-			System.out.println("Driver" + SEPARATOR + "Method" + SEPARATOR + "Time (ms)");
+			System.out.println("Facade" + SEPARATOR + "Method" + SEPARATOR + "Time (ms)");
 			
-			driver.setWriter(writer);
+			facade.setWriter(writer);
 			
 			//initializeSchema
 			startTime = System.currentTimeMillis();
-			driver.initializeSchema();
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "initializeSchema" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.initializeSchema();
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "initializeSchema" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//importUserDataset
 			startTime = System.currentTimeMillis();
-			importUserDataset(properties.getProperty("dataset.user.filepath"), driver);
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importUserDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importUserDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//importListenedTrackDataset
 			startTime = System.currentTimeMillis();
-			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), driver);
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//countArtists
 			startTime = System.currentTimeMillis();
-			driver.countArtists();
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countArtists" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.countArtists();
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countArtists" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//countTracks
 			startTime = System.currentTimeMillis();
-			driver.countTracks();
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countTracks" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.countTracks();
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countTracks" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//countUsers
 			startTime = System.currentTimeMillis();
-			driver.countUsers();
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countUsers" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.countUsers();
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countUsers" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//countEntities
 			startTime = System.currentTimeMillis();
-			driver.countEntities();
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "countEntities" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.countEntities();
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countEntities" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//averageNumberListenedTracksPerUserUnique
 			startTime = System.currentTimeMillis();
-			driver.averageNumberListenedTracksPerUser(true);
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.averageNumberListenedTracksPerUser(true);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			//averageNumberListenedTracksPerUserNotUnique
 			startTime = System.currentTimeMillis();
-			driver.averageNumberListenedTracksPerUser(false);
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUserNotUnique" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.averageNumberListenedTracksPerUser(false);
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUserNotUnique" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 		}
 	}	
 
-	public static void importUserDataset(String filepath, Driver driver) {
+	public static void importUserDataset(String filepath, Facade facade) {
 		
 		LineReader reader = new SimpleLineReader(filepath);
 		UserRecordManager recordManager = new UserRecordManager();
@@ -96,12 +96,12 @@ public class BenchmarkMain {
 
 			user = recordManager.getUserFromLine(line);
 
-			driver.insertUser(user);
+			facade.insertUser(user);
 		}
 
 	}
 	
-	public static void importListenedTrackDataset(String filepath, Driver driver){
+	public static void importListenedTrackDataset(String filepath, Facade facade){
 		LineReader reader = new SimpleLineReader(filepath);
 		ListenedTrackRecordManager recordManager = new ListenedTrackRecordManager();
 
@@ -114,7 +114,7 @@ public class BenchmarkMain {
 
 			listenedTrack = recordManager.getListenedTrackFromLine(line);
 
-			driver.insertListenedTrack(listenedTrack);
+			facade.insertListenedTrack(listenedTrack);
 		}
 	}
 
