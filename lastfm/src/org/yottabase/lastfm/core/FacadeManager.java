@@ -27,29 +27,34 @@ public class FacadeManager {
 		List<Facade> facades = new ArrayList<Facade>();
 
 		for (String facadeName : facadesName) {
-
-			String enabledFlagKey = facadeName + ".enabled";
-			String facadeFactoryKey = facadeName + ".factory";
-
-			if (properties.get(enabledFlagKey).equals("true")) {
-
-				String factoryClassName = properties
-						.getProperty(facadeFactoryKey);
-
-				try {
-					FacadeFactory facadeFactory = (FacadeFactory) Class
-							.forName(factoryClassName).newInstance();
-					Facade facade = facadeFactory.createService(properties);
-					facades.add(facade);
-
-				} catch (InstantiationException | IllegalAccessException
-						| ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			}
+			facades.add(this.getFacade(facadeName));
 		}
 
 		return facades;
+	}
+	
+	public Facade getFacade(String facadeName){
+		Facade facade = null;
+		
+		String enabledFlagKey = facadeName + ".enabled";
+		String facadeFactoryKey = facadeName + ".factory";
+
+		if (properties.get(enabledFlagKey).equals("true")) {
+
+			String factoryClassName = properties
+					.getProperty(facadeFactoryKey);
+
+			try {
+				FacadeFactory facadeFactory = (FacadeFactory) Class
+						.forName(factoryClassName).newInstance();
+				facade = facadeFactory.createService(properties);
+
+			} catch (InstantiationException | IllegalAccessException
+					| ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		return facade;
 	}
 
 }
