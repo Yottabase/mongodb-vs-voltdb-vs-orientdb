@@ -11,15 +11,16 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 
+
 public class MongodbDriver extends Driver {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
 	private final static String DATABASE = "lastfm";
 	private final static String COLLECTIONUSERS = "users";
-	private final static String COLLECTIONTRACKS = "tracks";
 	private final static String COLLECTIONARTISTS = "artists";
-
+	private final static String COLLECTIONTRACKS = "tracks";
+	private final static String COLLECTIONLISTENEDTRACKS = "listenedTracks";
 	private boolean artistDuplicate;
 	private boolean trackDuplicate;
 
@@ -46,6 +47,7 @@ public class MongodbDriver extends Driver {
 
 		db.getCollection(COLLECTIONTRACKS).createIndex(
 				new Document("trackId", 1), indOpt);
+		
 
 		// create artist index
 
@@ -66,7 +68,7 @@ public class MongodbDriver extends Driver {
 	}
 
 	@Override
-	public void insertListenedTrack(ListenedTrack listenedTrack) {
+	public void insertListenedTrack(ListenedTrack listenedTrack) {		
 		artistDuplicate = false;
 		trackDuplicate = false;
 		FindIterable<Document> iterable;
@@ -79,11 +81,18 @@ public class MongodbDriver extends Driver {
 		
 		if( iterable.first() != null )
 			trackDuplicate = true;
-
+		
+		/*
+		 * insert tracks
+		 */
 		if (!trackDuplicate) {
-			db.getCollection(COLLECTIONTRACKS).insertOne( new Document("trackId", listenedTrack.getTrackCode() )
-															.append("trackName", listenedTrack.getTrackName()));
+			db.getCollection(COLLECTIONTRACKS).insertOne(
+					new Document("trackId", listenedTrack.getTrackCode())
+					.append("trackName", listenedTrack.getTrackName())		
+					.append("artistId", listenedTrack.getArtistCode())
+					);
 		}
+
 
 		/*
 		 * insert artists
@@ -100,52 +109,51 @@ public class MongodbDriver extends Driver {
 															.append("artistName", listenedTrack.getArtistName()));
 		}
 
+		
 		/*
-		 * associo il brano all'utente che lo ha ascoltato
+		 * listenedTracks
 		 */
-		BasicDBObject trackObject = new BasicDBObject();
-		trackObject.put("trackId", listenedTrack.getTrackCode());
-		trackObject.put("time", listenedTrack.getTimeAsJavaDate());
-
-		db.getCollection(COLLECTIONUSERS).updateOne(
-				new BasicDBObject("code", listenedTrack.getCode()),
-				new BasicDBObject("$push", new BasicDBObject("tracks",
-						trackObject)));
-
+		db.getCollection(COLLECTIONLISTENEDTRACKS).insertOne(
+				new Document("userId", listenedTrack.getCode())
+				.append("trackId", listenedTrack.getTrackCode())
+				.append("time", listenedTrack.getTimeAsJavaDate())
+				);
+		
+		
 		/*
 		 * associo il brano all'artista
 		 */
-		BasicDBObject ArtistTracks = new BasicDBObject();
-		ArtistTracks.put("trackId", listenedTrack.getTrackCode());
+		if (!trackDuplicate) {
+			BasicDBObject ArtistTracks = new BasicDBObject();
+			ArtistTracks.put("trackId", listenedTrack.getTrackCode());
 
-		db.getCollection(COLLECTIONUSERS).updateOne(
-				new BasicDBObject("code", listenedTrack.getCode()),
-				new BasicDBObject("$push", new BasicDBObject("tracks",
-						ArtistTracks)));
-
+			db.getCollection(COLLECTIONARTISTS)
+					.updateOne(
+							new BasicDBObject("artistId",
+									listenedTrack.getArtistCode()),
+							new BasicDBObject("$push", ArtistTracks));
+		}
 	}
 
 	@Override
 	public void countArtists() {
-		// TODO Auto-generated method stub
-		
+		this.writer.write(String.valueOf(db.getCollection(COLLECTIONARTISTS).count()));
 	}
 
 	@Override
 	public void countTracks() {
-		// TODO Auto-generated method stub
-		
+		System.out.println(db.getCollection(COLLECTIONTRACKS).count());
 	}
 
 	@Override
 	public void countUsers() {
-		// TODO Auto-generated method stub
-		
+		System.out.println(db.getCollection(COLLECTIONUSERS).count());	
 	}
 
 	@Override
 	public void countEntities() {
 		// TODO Auto-generated method stub
+		//fai somma dei risultati dei tre metodi precedenti
 		
 	}
 
