@@ -1,6 +1,6 @@
 #dataset
-dataset.user.filepath=/
-dataset.listened_tracks.filepath=/
+dataset.user.filepath=/home/
+dataset.listened_tracks.filepath=/home/
 
 #output.type=console
 output.type=filesystem
@@ -15,10 +15,10 @@ noop.factory=org.yottabase.lastfm.driver.noop.NoopDriverFactory
 
 #Voltdb
 voltdb.enabled=false
-voltdb.factory=org.yottabase.lastfm.driver.voltdb.VoltdbDriverFactory
+voltdb.factory=org.yottabase.lastfm.driver.voltdb.VoltDBFacadeFactory
 voltdb.host=localhost
-voltdb.username=username
-voltdb.password=password
+voltdb.username=
+voltdb.password=
 
 #Mongodb
 mongodb.enabled=false
