@@ -46,13 +46,13 @@ public class BenchmarkMain {
 			
 			startTime = System.currentTimeMillis();
 			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importUserDataset()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertUser()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			
 			
 			startTime = System.currentTimeMillis();
 			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertListenedTrack()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			
 			
