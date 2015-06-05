@@ -6,6 +6,7 @@ import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
@@ -26,12 +27,11 @@ public class MongodbDriver extends Driver {
 
 	public MongodbDriver(MongoClient client) {
 		this.mongoClient = client;
+		db = mongoClient.getDatabase(DATABASE);
 	}
 
 	@Override
 	public void initializeSchema() {
-		db = mongoClient.getDatabase(DATABASE);
-
 		db.drop();
 
 		System.out.println("crea schema");
@@ -142,17 +142,44 @@ public class MongodbDriver extends Driver {
 
 	@Override
 	public void countTracks() {
-		System.out.println(db.getCollection(COLLECTIONTRACKS).count());
+		//System.out.println(db.getCollection(COLLECTIONTRACKS).count());
 	}
 
 	@Override
 	public void countUsers() {
-		System.out.println(db.getCollection(COLLECTIONUSERS).count());	
+		//System.out.println(db.getCollection(COLLECTIONUSERS).count());	
+		//System.out.println(db.getCollection(COLLECTIONLISTENEDTRACKS).count());	
+
 	}
 
 	@Override
 	public void countEntities() {
-		// TODO Auto-generated method stub
+		FindIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).find(new Document("age", new Document("$lt", 20).append("$gt", 15))).limit(2000);
+		
+		iterable.forEach(new Block<Document>() {
+			public void apply(final Document document) {
+				//System.out.println(document.get("code"));
+				/*
+				 * join tra user e tracks
+				 */
+				FindIterable<Document> listenedIterable = db.getCollection(COLLECTIONLISTENEDTRACKS).find(new Document("userId", document.get("code"))).limit(2000);
+				
+				listenedIterable.forEach(new Block<Document>() {
+					@Override
+					public void apply(final Document document2) {
+						//System.out.println(document2);
+						FindIterable<Document> artistIterable = db.getCollection(COLLECTIONARTISTS).find(new Document("trackId", document2.get("trackId")));
+						artistIterable.forEach(new Block<Document>() {
+							@Override
+							public void apply(final Document document3) {
+								//System.out.println(document3.get("artistName"));
+							}
+						});
+					}
+				});
+			}
+		});
+		
 		//fai somma dei risultati dei tre metodi precedenti
 		
 	}

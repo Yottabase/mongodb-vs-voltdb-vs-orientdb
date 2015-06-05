@@ -34,21 +34,21 @@ public class BenchmarkMain {
 			
 			driver.setWriter(writer);
 			
-			//initializeSchema
-			startTime = System.currentTimeMillis();
-			driver.initializeSchema();
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "initializeSchema" + SEPARATOR + (System.currentTimeMillis() - startTime));
-			
-			//importUserDataset
-			startTime = System.currentTimeMillis();
-			importUserDataset(properties.getProperty("dataset.user.filepath"), driver);
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importUserDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
-			
-			//importListenedTrackDataset
-			startTime = System.currentTimeMillis();
-			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), driver);
-			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
-			
+//			//initializeSchema
+//			startTime = System.currentTimeMillis();
+//			driver.initializeSchema();
+//			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "initializeSchema" + SEPARATOR + (System.currentTimeMillis() - startTime));
+//			
+//			//importUserDataset
+//			startTime = System.currentTimeMillis();
+//			importUserDataset(properties.getProperty("dataset.user.filepath"), driver);
+//			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importUserDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
+//			
+//			//importListenedTrackDataset
+//			startTime = System.currentTimeMillis();
+//			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), driver);
+//			System.out.println(driver.getClass().getSimpleName() + SEPARATOR + "importListenedTrackDataset" + SEPARATOR + (System.currentTimeMillis() - startTime));
+//			
 			//countArtists
 			startTime = System.currentTimeMillis();
 			driver.countArtists();
