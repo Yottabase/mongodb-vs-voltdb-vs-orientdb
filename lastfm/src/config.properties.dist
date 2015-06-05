@@ -7,7 +7,7 @@ output.type=filesystem
 output.folder=/tmp
 
 #general
-supported_facades==noop,voltdb,mongodb,orientdb
+supported_facades=noop,voltdb,mongodb,orientdb
 
 #Noop
 noop.enabled=true
