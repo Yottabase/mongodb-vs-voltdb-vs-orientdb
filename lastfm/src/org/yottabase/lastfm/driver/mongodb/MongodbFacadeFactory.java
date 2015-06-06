@@ -10,7 +10,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
-public class MongodbDriverFactory implements FacadeFactory {
+public class MongodbFacadeFactory implements FacadeFactory {
 
 	@Override
 	public Facade createService(Properties properties) {
@@ -26,7 +26,7 @@ public class MongodbDriverFactory implements FacadeFactory {
 		MongoClient mongoClient = new MongoClient(
 				new ServerAddress(host, 27017), Arrays.asList(credential));
 
-		driver = new MongodbDriver(mongoClient);
+		driver = new MongodbFacade(mongoClient);
 
 		return driver;
 	}

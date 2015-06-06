@@ -38,22 +38,21 @@ public class BenchmarkMain {
 			OutputWriter writer = outputWriterFactory.createService(properties, facade.getClass().getSimpleName() + "_output.txt");
 			facade.setWriter(writer);
 			
-			startTime = System.currentTimeMillis();
-			facade.initializeSchema();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "initializeSchema()" + SEPARATOR + (System.currentTimeMillis() - startTime));
-			
-			
-			
-			startTime = System.currentTimeMillis();
-			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertUser()" + SEPARATOR + (System.currentTimeMillis() - startTime));
-			
-			
-			
-			startTime = System.currentTimeMillis();
-			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertListenedTrack()" + SEPARATOR + (System.currentTimeMillis() - startTime));
-			
+//			startTime = System.currentTimeMillis();
+//			facade.initializeSchema();
+//			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "initializeSchema()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+//			
+//			
+//			
+//			startTime = System.currentTimeMillis();
+//			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
+//			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertUser()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+//			
+//			
+//			
+//			startTime = System.currentTimeMillis();
+//			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
+//			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertListenedTrack()" + SEPARATOR + (System.currentTimeMillis() - startTime));		
 			
 			
 			startTime = System.currentTimeMillis();

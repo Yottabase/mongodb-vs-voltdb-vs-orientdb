@@ -13,7 +13,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 
 
-public class MongodbDriver extends Facade {
+public class MongodbFacade extends Facade {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
@@ -25,7 +25,7 @@ public class MongodbDriver extends Facade {
 	private boolean artistDuplicate;
 	private boolean trackDuplicate;
 
-	public MongodbDriver(MongoClient client) {
+	public MongodbFacade(MongoClient client) {
 		this.mongoClient = client;
 		db = mongoClient.getDatabase(DATABASE);
 	}
