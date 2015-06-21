@@ -61,9 +61,12 @@ public class OrientDBDriver implements Driver {
 	public void insertListenedTrack(ListenedTrack listenedTrack) {
 		Vertex user = graph.getVertexByKey("User.userID", listenedTrack.getCode());
 		Vertex artist = graph.getVertexByKey("Artist.artistID", listenedTrack.getArtistCode());
-		Vertex track = graph.getVertexByKey("Track.trackID", listenedTrack.getTrackCode());;
+		Vertex track = graph.getVertexByKey("Track.trackID", listenedTrack.getTrackCode());
+		boolean newSingRel = false;	// new pair <artist, track>
 		
 		if (artist == null) {
+			newSingRel = true;
+			
 			artist = graph.addVertex(
 				"class:Artist",
 				"artistID", listenedTrack.getArtistCode(),
@@ -71,13 +74,16 @@ public class OrientDBDriver implements Driver {
 		}
 		
 		if (track == null) {
+			newSingRel = true;
+			
 			track = graph.addVertex(
 				"class:Track",
 				"trackID", 	listenedTrack.getTrackCode(),
 				"name", 	listenedTrack.getTrackName());
-			
-			graph.addEdge(null, artist, track, "Sing");
 		}
+		
+		if (newSingRel)
+			graph.addEdge(null, artist, track, "Sing");
 		
 		graph.addEdge(null, user, track, "Listen").setProperty("time", listenedTrack.getTimeAsJavaDate());
 
