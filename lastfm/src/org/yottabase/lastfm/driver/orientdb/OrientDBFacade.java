@@ -1,6 +1,6 @@
 package org.yottabase.lastfm.driver.orientdb;
 
-import org.yottabase.lastfm.core.Driver;
+import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
@@ -10,11 +10,11 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
-public class OrientDBDriver implements Driver {
+public class OrientDBFacade extends Facade {
 	
 	private OrientGraph graph;
 
-	public OrientDBDriver(OrientGraph graph) {
+	public OrientDBFacade(OrientGraph graph) {
 		this.graph = graph;
 	}
 
@@ -88,6 +88,66 @@ public class OrientDBDriver implements Driver {
 		graph.addEdge(null, user, track, "Listen").setProperty("time", listenedTrack.getTimeAsJavaDate());
 
 		graph.commit();
+		
+	}
+
+	@Override
+	public void countArtists() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countTracks() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countUsers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void countEntities() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksListenedTogether(int n) {
+		// TODO Auto-generated method stub
 		
 	}
 
