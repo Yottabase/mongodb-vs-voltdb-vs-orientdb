@@ -15,6 +15,8 @@ import org.yottabase.lastfm.importer.SimpleLineReader;
 import org.yottabase.lastfm.importer.User;
 import org.yottabase.lastfm.importer.UserRecordManager;
 
+import utils.Timer;
+
 public class BenchmarkMain {
 
 	private static final String SEPARATOR = "\t";
@@ -23,145 +25,151 @@ public class BenchmarkMain {
 
 		int n = 10;
 		
-		long startTime;
-		
 		Config config = new Config();
 		Properties properties = config.getProperties();
 		FacadeManager facadeManager = new FacadeManager(properties);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
 		
-		System.out.println("Facade" + SEPARATOR + "Method" + SEPARATOR + "Time (ms)");
+		Timer globalElapsedTime = new Timer("Total", true);
+		Timer facadeElapsedTime;
+		Timer methodElapsedTime;
 		
 		for (Facade facade : facadeManager.getFacades()) {
+			String facadeName = facade.getClass().getSimpleName();
+			
+			facadeElapsedTime = new Timer(facadeName, true);
 			
 			OutputWriter writer = outputWriterFactory.createService(properties, facade.getClass().getSimpleName() + "_output.txt");
 			facade.setWriter(writer);
 			
-			startTime = System.currentTimeMillis();
+			
+			//BENCHMARK
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "initializeSchema()", true);
 			facade.initializeSchema();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "initializeSchema()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "insertUser()", true);
 			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertUser()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "insertListenedTrack()", true);
 			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "insertListenedTrack()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countArtists()", true);
 			facade.countArtists();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countArtists()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countTracks()", true);
 			facade.countTracks();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countTracks()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countUsers()", true);
 			facade.countUsers();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countUsers()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countEntities()", true);
 			facade.countEntities();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "countEntities()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "averageNumberListenedTracksPerUser(true)", true);
 			facade.averageNumberListenedTracksPerUser(true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser(true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
-			
-			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "averageNumberListenedTracksPerUser(false)", true);
 			facade.averageNumberListenedTracksPerUser(false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberListenedTracksPerUser(false)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "averageNumberSungTracksPerArtist()", true);
 			facade.averageNumberSungTracksPerArtist();
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberSungTracksPerArtist()" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			//usersChart
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, true, true)", true);
 			facade.usersChart(n, true, true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, true, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, false, true)", true);
 			facade.usersChart(n, false, true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, false, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();			
 
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, true, false)", true);
 			facade.usersChart(n, true, false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, true, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, false, false)", true);
 			facade.usersChart(n, false, false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n, false, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			//tracksUsers
-			startTime = System.currentTimeMillis();
+			//tracksChart
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, true, true)", true);
 			facade.tracksChart(n, true, true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, true, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, false, true)", true);
 			facade.tracksChart(n, false, true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, false, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();			
 
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, true, false)", true);
 			facade.tracksChart(n, true, false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, true, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, false, false)", true);
 			facade.tracksChart(n, false, false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "tracksChart(n, false, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();			
 
 			
 			
 			//artistsChart
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, true, true)", true);
 			facade.artistsChart(n, true, true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, true, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, false, true)", true);
 			facade.artistsChart(n, false, true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, false, true)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();			
 
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, true, false)", true);
 			facade.artistsChart(n, true, false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, true, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();			
 			
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, false, false)", true);
 			facade.artistsChart(n, false, false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "artistsChart(n, false, false)" + SEPARATOR + (System.currentTimeMillis() - startTime));			
+			methodElapsedTime.pauseAndPrint();						
 
 			
 			
 			//tracksListenedTogether
-			startTime = System.currentTimeMillis();
+			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksListenedTogether(n)", true);
 			facade.tracksListenedTogether(n);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "usersChart(n)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			methodElapsedTime.pauseAndPrint();
 			
+			facadeElapsedTime.pauseAndPrint();
 			writer.close();
 		}
+		
+		globalElapsedTime.pauseAndPrint();
 	}	
 
 	public static void importUserDataset(String filepath, Facade facade) {
