@@ -5,6 +5,9 @@ import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
 import com.orientechnologies.orient.core.metadata.schema.OType;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -93,55 +96,101 @@ public class OrientDBFacade extends Facade {
 
 	@Override
 	public void countArtists() {
-		// TODO Auto-generated method stub
+		long numArtists = graph.countVertices("Artist");
+		writer.write( String.valueOf(numArtists) );		// TODO cosa bisogna stampare?
 		
 	}
 
 	@Override
 	public void countTracks() {
-		// TODO Auto-generated method stub
+		long numTracks = graph.countVertices("Track");
+		writer.write( String.valueOf(numTracks) );		// TODO cosa bisogna stampare?
 		
 	}
 
 	@Override
 	public void countUsers() {
-		// TODO Auto-generated method stub
+		long numUsers = graph.countVertices("User");
+		writer.write( String.valueOf(numUsers) );		// TODO cosa bisogna stampare?
 		
 	}
 
 	@Override
 	public void countEntities() {
-		// TODO Auto-generated method stub
+		long numVertices = graph.countVertices();
+		writer.write( String.valueOf(numVertices) );	// TODO cosa bisogna stampare?
 		
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
-		// TODO Auto-generated method stub
+		String querySQL = 
+				"SELECT avg(numUniqueListenings) FROM ("
+						+ "SELECT out AS user,count(" + ((uniqueTrack) ? "distinct(in)" : "in") + ") AS numUniqueListenings "
+						+ "FROM Listen "
+						+ "GROUP BY out" +
+				")";
 		
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
+			writer.write( String.valueOf(v.getProperty("avg")) ); 	// TODO cosa bisogna stampare?
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
-		// TODO Auto-generated method stub
+		String querySQL = 
+			  "SELECT avg(out_Sing.size()) "
+			+ "FROM Artist";
 		
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
+			writer.write( String.valueOf(v.getProperty("avg")) );		// TODO cosa bisogna stampare?
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void usersChart(int n, boolean top, boolean uniqueTrack) {
-		// TODO Auto-generated method stub
+		String querySQL = 
+				  "SELECT *,out_Listen.size() AS listenings "
+				+ "FROM User "
+				+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
+				+ "LIMIT " + n;  // TODO no distinct
+		
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
+			writer.write(v.toString());		// TODO cosa bisogna stampare?
 		
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
-		// TODO Auto-generated method stub
+		String querySQL = 		
+				"SELECT expand(track) FROM ("
+						+ "SELECT in AS track, count(" + ((uniqueTracks) ? "distinct(out)" : "out") + ") AS listenings "
+						+ "FROM Listen GROUP BY in "
+						+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
+						+ "LIMIT " + n +
+				")";
+		
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
+			writer.write(v.toString());		// TODO cosa bisogna stampare?
 		
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
-		// TODO Auto-generated method stub
+		String querySQL = 
+				"SELECT expand(track) FROM ("
+						+ "SELECT in AS track, count(" + ((uniqueTracks) ? "distinct(out)" : "out") + ") AS listenings "
+						+ "FROM Listen GROUP BY in "
+						+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
+						+ "LIMIT " + n +
+				")";
+		
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
+			for (Edge e : v.getEdges(Direction.IN, "Sing"))
+				writer.write(e.getVertex(Direction.OUT).toString());	// TODO cosa bisogna stampare?
 		
 	}
 
