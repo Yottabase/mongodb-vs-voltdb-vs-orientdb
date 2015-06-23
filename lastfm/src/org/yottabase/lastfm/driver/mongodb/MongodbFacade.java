@@ -25,9 +25,10 @@ public class MongodbFacade extends Facade {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
-	private final static String DATABASE = "lastfmTest";
+	private final static String DATABASE = "lastfmNormalizzato";
 	private final static String COLLECTIONUSERS = "users";
 	private final static String COLLECTIONARTISTS = "artists";
+	private final static String COLLECTIONLISTENED = "listened";
 
 	public MongodbFacade(MongoClient client) {
 		this.mongoClient = client;
@@ -56,33 +57,12 @@ public class MongodbFacade extends Facade {
 		db.getCollection(COLLECTIONUSERS).createIndex(
 				(new Document("code", 1)), uniqueCostraint);
 		
+		db.getCollection(COLLECTIONLISTENED).createIndex(
+				(new Document("code", 1)), noUniqueCostraint);
 		
+		db.getCollection(COLLECTIONLISTENED).createIndex(
+				(new Document("trackId", 1)), noUniqueCostraint);
 		
-		/*
-		 * l'indice RALLENTA notevolmente gli inserimenti perchè ad ogni scrittura deve essere aggiornato
-		
-		// create artist index
-
-		
-			db.getCollection(COLLECTIONARTISTS).createIndex(
-				(new Document("artistId", 1)), uniqueCostraint);
-		
-		//create user index
-		 
-		db.getCollection(COLLECTIONUSERS).createIndex(
-				(new Document("code", 1)), uniqueCostraint);
-		
-		//db.users.createIndex( { "tracks.trackId": 1, "tracks.time": 1 } )
-		
-		db.getCollection(COLLECTIONUSERS).createIndex(
-				(new Document("tracks.trackId", 1).append("tracks.time", 1)), noUniqueCostraint);
-		
-		
-		//db.artists.createIndex( { "songs.trackId": 1, "songs.trackName": 1 } )
-
-		db.getCollection(COLLECTIONARTISTS).createIndex(
-				(new Document("songs.trackId", 1).append("songs.trackName", 1)), uniqueCostraint);////////////verifica perche da errore con uniquecostr
-		 */
 	}
 
 	@Override
@@ -134,18 +114,12 @@ public class MongodbFacade extends Facade {
 		
 		
 		/*
-		 * update listenedTracks users
+		 * insert listenedTracks users
 		*/
-		BasicDBObject trackObject = new BasicDBObject();
-		trackObject.put("trackId", listenedTrack.getTrackCode());
 		
-		if(listenedTrack.getTimeAsJavaDate()!=null)
-			trackObject.put("time", listenedTrack.getTimeAsJavaDate());
-
-		db.getCollection(COLLECTIONUSERS).updateOne(
-				new BasicDBObject("code", listenedTrack.getCode()),
-				new BasicDBObject("$push", new BasicDBObject("tracks",
-						trackObject)));
+		
+		db.getCollection(COLLECTIONLISTENED).insertOne( new Document("code", listenedTrack.getCode())
+		.append("trackId", listenedTrack.getTrackCode()).append("timeId", listenedTrack.getTimeAsJavaDate()));
 		
 		 
 	}
@@ -165,6 +139,7 @@ public class MongodbFacade extends Facade {
 		 * 		db.runCommand ( { distinct: "artists", key: "songs" } )
 		 */
 
+		
 		Document explodeTracks = new Document("distinct", "artists").append("key", "songs.trackId");
 		
 		Document distinctTracks = db.runCommand(explodeTracks);
@@ -193,22 +168,19 @@ public class MongodbFacade extends Facade {
 
 	@Override
 	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
-		
 		/*console query
-		 * db.users.aggregate( [ { $project: { "_id":1, "code": 1, "total": { $size: "$tracks" } } },{$group:{_id: "null",avgQuantity: { $avg: "$total" }}} ] )
+		 * db.listened.aggregate( [ { $group: { _id: "$code", total: { $sum: 1 } } },{ $group: { _id: null,lngAvg: {$avg: "$total"} }} ])
 		 */
-		Document groupByTracks = new Document("$project", new Document("code", 1).append("total", new Document("$size", "$tracks")));
+		Document groupByTracks = new Document("$group", new Document("_id", "$code").append("total", new Document("$sum", 1)));
 		Document avg = new Document("$group", new Document("_id", null).append("avg", new Document("$avg", "$total")));
 		
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).aggregate(asList(groupByTracks,avg));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,avg));
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 				System.out.println(document.toJson());
 					
 			}
 		});
-		
-		
 	}
 
 	@Override
@@ -229,9 +201,10 @@ public class MongodbFacade extends Facade {
 			}
 		});
 		
-		
+
 	}
 
+	///ok manca distinct
 	@Override
 	public void usersChart(int n, boolean top, boolean uniqueTrack) {
 		int order = 1;
@@ -240,14 +213,14 @@ public class MongodbFacade extends Facade {
 			
 		
 		/*console query
-		 * db.users.aggregate( [ { $project: { "_id":0, "code": 1, "numberListenedTracks": { $size: "$tracks" } } } ] )
+		 * db.listened.aggregate( [ { $group: { _id: "$code", total: { $sum: 1 } } },{ $sort: { total: 1 }} ],{allowDiskUse: true})
 		 */
 		
-		Document groupByTracks = new Document("$project", new Document("code", 1).append("_id", 0).append("total", new Document("$size", "$tracks")));
+		Document groupByTracks = new Document("$group", new Document("_id", "$code").append("total", new Document("$sum", 1)));
 		Document sort = new Document("$sort", new Document("total",order));
 		Document limit = new Document("$limit", n);
 		
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).aggregate(asList(groupByTracks,sort,limit));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 				System.out.println(document.toJson());
@@ -257,19 +230,18 @@ public class MongodbFacade extends Facade {
 		
 		
 	}
-
+//ok manca distinct
 	@Override
 	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
 		int order = 1;
 		if(top)
 			order = -1;
 		
-		Document explodeTracks = new Document("$unwind", "$tracks");
-		Document groupBy = new Document("$group", new Document("_id", "$tracks.trackId").append("total", new Document("$sum", 1)));
+		Document groupByTracks = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));
 		Document sort = new Document("$sort", new Document("total",order));
 		Document limit = new Document("$limit", n);
 		
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).aggregate(asList(explodeTracks,groupBy,sort,limit));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
 		
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
@@ -286,24 +258,35 @@ public class MongodbFacade extends Facade {
 		int order = 1;
 		if(top)
 			order = -1;
-			
 		
-		/*console query
-		 * db.users.aggregate( [ { $project: { "_id":0, "artistId": 1, "total": { $size: "$tracks" } } } ] )
-		 */
 		
-		Document groupByTracks = new Document("$project", new Document("artistId", 1).append("_id", 0).append("total", new Document("$size", "$songs")));
+		
+		Document groupByTracks = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));
 		Document sort = new Document("$sort", new Document("total",order));
 		Document limit = new Document("$limit", n);
+				
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
 		
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).aggregate(asList(groupByTracks,sort,limit));
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
-				System.out.println(document.toJson());
-					
-			}
-		});
+
+				/*console query
+				 * db.artists.aggregate( [ { $match: { "songs.trackId": "1c061863-1d3e-4066-aa93-5c9ce0bf72f2" } }, { $project: { "_id":0, "artistId": 1, "artistName": 1 } } ] )
+				 */
 		
+				Document groupUser = new Document("$match", new Document("songs.trackId", document.get("_id")));
+				Document projection = new Document("$project", new Document("_id", 0).append("artistId",1).append("artistName", 1));
+				
+				AggregateIterable<Document> iterableArtist = db.getCollection(COLLECTIONARTISTS).aggregate(asList(groupUser,projection));
+				iterableArtist.forEach(new Block<Document>() {
+					public void apply(final Document document2) {
+						System.out.println(document2.toJson()+ " count : " + document.get("total"));
+							
+					}
+				});
+				
+			}
+		});	
 		
 	}
 
