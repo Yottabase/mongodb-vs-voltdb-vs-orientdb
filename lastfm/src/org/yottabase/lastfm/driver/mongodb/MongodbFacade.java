@@ -50,14 +50,21 @@ public class MongodbFacade extends Facade {
 		IndexOptions noUniqueCostraint = new IndexOptions();
 		noUniqueCostraint.unique(false);
 		
-
+		db.getCollection(COLLECTIONARTISTS).createIndex(
+				(new Document("artistId", 1)), uniqueCostraint);
+		
+		db.getCollection(COLLECTIONUSERS).createIndex(
+				(new Document("code", 1)), uniqueCostraint);
+		
+		
+		
 		/*
 		 * l'indice RALLENTA notevolmente gli inserimenti perchè ad ogni scrittura deve essere aggiornato
 		
 		// create artist index
 
 		
-		db.getCollection(COLLECTIONARTISTS).createIndex(
+			db.getCollection(COLLECTIONARTISTS).createIndex(
 				(new Document("artistId", 1)), uniqueCostraint);
 		
 		//create user index
@@ -75,7 +82,7 @@ public class MongodbFacade extends Facade {
 
 		db.getCollection(COLLECTIONARTISTS).createIndex(
 				(new Document("songs.trackId", 1).append("songs.trackName", 1)), uniqueCostraint);////////////verifica perche da errore con uniquecostr
-				 */
+		 */
 	}
 
 	@Override
@@ -124,9 +131,11 @@ public class MongodbFacade extends Facade {
 			db.getCollection(COLLECTIONARTISTS).updateOne(artist,updateQuery);
 		}
 		
+		
+		
 		/*
 		 * update listenedTracks users
-		 */
+		*/
 		BasicDBObject trackObject = new BasicDBObject();
 		trackObject.put("trackId", listenedTrack.getTrackCode());
 		
@@ -138,6 +147,7 @@ public class MongodbFacade extends Facade {
 				new BasicDBObject("$push", new BasicDBObject("tracks",
 						trackObject)));
 		
+		 
 	}
 
 
