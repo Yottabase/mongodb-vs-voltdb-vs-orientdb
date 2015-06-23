@@ -145,7 +145,7 @@ public class VoltDBFacade extends Facade{
 	}
 
 	@Override
-	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
+	public void averageNumberSungTracksPerArtist() {
 		// TODO Auto-generated method stub
 		
 	}

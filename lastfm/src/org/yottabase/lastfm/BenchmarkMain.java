@@ -93,14 +93,8 @@ public class BenchmarkMain {
 			
 			
 			startTime = System.currentTimeMillis();
-			facade.averageNumberSungTracksPerArtist(true);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberSungTracksPerArtist(true)" + SEPARATOR + (System.currentTimeMillis() - startTime));
-			
-			
-			
-			startTime = System.currentTimeMillis();
-			facade.averageNumberSungTracksPerArtist(false);
-			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberSungTracksPerArtist(false)" + SEPARATOR + (System.currentTimeMillis() - startTime));
+			facade.averageNumberSungTracksPerArtist();
+			System.out.println(facade.getClass().getSimpleName() + SEPARATOR + "averageNumberSungTracksPerArtist()" + SEPARATOR + (System.currentTimeMillis() - startTime));
 			
 			
 			
