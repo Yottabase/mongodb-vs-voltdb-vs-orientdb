@@ -2,6 +2,7 @@ package org.yottabase.lastfm.driver.mongodb;
 
 import static java.util.Arrays.asList;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class MongodbFacade extends Facade {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
-	private final static String DATABASE = "lastfmNormalizzato";
+	private final static String DATABASE = "lastfm2Normalizzato";
 	private final static String COLLECTIONUSERS = "users";
 	private final static String COLLECTIONARTISTS = "artists";
 	private final static String COLLECTIONLISTENED = "listened";
@@ -117,9 +118,24 @@ public class MongodbFacade extends Facade {
 		 * insert listenedTracks users
 		*/
 		
+		Bson codeTracks = new Document("code", listenedTrack.getCode()).append("trackId", listenedTrack.getTrackCode());
 		
-		db.getCollection(COLLECTIONLISTENED).insertOne( new Document("code", listenedTrack.getCode())
-		.append("trackId", listenedTrack.getTrackCode()).append("timeId", listenedTrack.getTimeAsJavaDate()));
+		BasicDBObject time = new BasicDBObject("time", listenedTrack.getTimeAsJavaDate());
+		
+		
+		BasicDBObject updateTime =	new BasicDBObject("$push", new BasicDBObject("timeListened",time));
+		
+		Document updateListenedTime = db.getCollection(COLLECTIONLISTENED).findOneAndUpdate(codeTracks,updateTime);
+		
+		/*
+		 * insert and update 
+		 */
+		if(updateListenedTime == null){
+			db.getCollection(COLLECTIONLISTENED).insertOne( new Document("code", listenedTrack.getCode())
+			.append("trackId", listenedTrack.getTrackCode()));
+			
+			db.getCollection(COLLECTIONLISTENED).updateOne(codeTracks,updateTime);
+		}
 		
 		 
 	}
@@ -203,24 +219,43 @@ public class MongodbFacade extends Facade {
 		
 
 	}
-
-	///ok manca distinct
+	
+	//ok
 	@Override
 	public void usersChart(int n, boolean top, boolean uniqueTrack) {
 		int order = 1;
 		if(top)
 			order = -1;
 			
+		if(uniqueTrack){
+			/*console query
+			 * DISTINCT
+			 * db.listened.aggregate( [ { $group: { _id: "$code", total: { $sum: 1 } } },{ $sort: { total: 1 }} ],{allowDiskUse: true})
+			 */
+			
+			Document groupByTracks = new Document("$group", new Document("_id", "$code").append("total", new Document("$sum", 1)));
+			Document sort = new Document("$sort", new Document("total",order));
+			Document limit = new Document("$limit", n);
+			
+			AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
+			iterable.forEach(new Block<Document>() {
+				public void apply(final Document document) {
+					System.out.println(document.toJson());
+						
+				}
+			});	
+		}else{
 		
 		/*console query
-		 * db.listened.aggregate( [ { $group: { _id: "$code", total: { $sum: 1 } } },{ $sort: { total: 1 }} ],{allowDiskUse: true})
+		 * db.listened.aggregate( [ { $project: { "_id":0, "code": 1, "timeListened": { $size: { "$ifNull": [ "$timeListened", [] ] } } } } ] )
 		 */
 		
-		Document groupByTracks = new Document("$group", new Document("_id", "$code").append("total", new Document("$sum", 1)));
+		Document groupByTracks = new Document("$project", new Document("code", 1).append("_id", 0).append("timeListened", new Document("$size", new Document( "$ifNull",Arrays.asList("$timeListened",Arrays.asList() ) ))));
+		Document groupByUser = new Document("$group", new Document("_id", "$code").append("total", new Document("$sum", "$timeListened")));
 		Document sort = new Document("$sort", new Document("total",order));
 		Document limit = new Document("$limit", n);
 		
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,groupByUser,sort,limit));
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 				System.out.println(document.toJson());
@@ -228,30 +263,52 @@ public class MongodbFacade extends Facade {
 			}
 		});
 		
-		
+		}
 	}
-//ok manca distinct
+
+	//ok
 	@Override
 	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
 		int order = 1;
 		if(top)
 			order = -1;
 		
-		Document groupByTracks = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));
-		Document sort = new Document("$sort", new Document("total",order));
-		Document limit = new Document("$limit", n);
-		
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
-		
-		iterable.forEach(new Block<Document>() {
-			public void apply(final Document document) {
-				System.out.println(document.toJson());
-					
+		if(uniqueTracks){
+			Document groupByTracks = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));
+			Document sort = new Document("$sort", new Document("total",order));
+			Document limit = new Document("$limit", n);
+			
+			AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
+			
+			iterable.forEach(new Block<Document>() {
+				public void apply(final Document document) {
+					System.out.println(document.toJson());
+						
+				}
+			});
+		}else{
+			
+				/*console query
+				 * db.listened.aggregate( [ { $project: { "_id":0, "code": 1, "timeListened": { $size: { "$ifNull": [ "$timeListened", [] ] } } } } ] )
+				 */
+				
+				Document groupByTracks = new Document("$project", new Document("trackId", 1).append("_id", 0).append("timeListened", new Document("$size", new Document( "$ifNull",Arrays.asList("$timeListened",Arrays.asList() ) ))));
+				Document groupByUser = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", "$timeListened")));
+				Document sort = new Document("$sort", new Document("total",order));
+				Document limit = new Document("$limit", n);
+				
+				AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,groupByUser,sort,limit));
+				iterable.forEach(new Block<Document>() {
+					public void apply(final Document document) {
+						System.out.println(document.toJson());
+							
+					}
+				});
+			
 			}
-		});
-		
 	}
-
+	
+	//ok
 	@Override
 
 	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
@@ -260,33 +317,65 @@ public class MongodbFacade extends Facade {
 			order = -1;
 		
 		
-		
-		Document groupByTracks = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));
-		Document sort = new Document("$sort", new Document("total",order));
-		Document limit = new Document("$limit", n);
-				
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
-		
-		iterable.forEach(new Block<Document>() {
-			public void apply(final Document document) {
-
-				/*console query
-				 * db.artists.aggregate( [ { $match: { "songs.trackId": "1c061863-1d3e-4066-aa93-5c9ce0bf72f2" } }, { $project: { "_id":0, "artistId": 1, "artistName": 1 } } ] )
-				 */
-		
-				Document groupUser = new Document("$match", new Document("songs.trackId", document.get("_id")));
-				Document projection = new Document("$project", new Document("_id", 0).append("artistId",1).append("artistName", 1));
-				
-				AggregateIterable<Document> iterableArtist = db.getCollection(COLLECTIONARTISTS).aggregate(asList(groupUser,projection));
-				iterableArtist.forEach(new Block<Document>() {
-					public void apply(final Document document2) {
-						System.out.println(document2.toJson()+ " count : " + document.get("total"));
-							
-					}
-				});
-				
-			}
-		});	
+		if(uniqueTracks){
+			Document groupByTracks = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));
+			Document sort = new Document("$sort", new Document("total",order));
+			Document limit = new Document("$limit", n);
+					
+			AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,sort,limit));
+			
+			iterable.forEach(new Block<Document>() {
+				public void apply(final Document document) {
+	
+					/*console query
+					 * db.artists.aggregate( [ { $match: { "songs.trackId": "1c061863-1d3e-4066-aa93-5c9ce0bf72f2" } }, { $project: { "_id":0, "artistId": 1, "artistName": 1 } } ] )
+					 */
+			
+					Document groupUser = new Document("$match", new Document("songs.trackId", document.get("_id")));
+					Document projection = new Document("$project", new Document("_id", 0).append("artistId",1).append("artistName", 1));
+					
+					AggregateIterable<Document> iterableArtist = db.getCollection(COLLECTIONARTISTS).aggregate(asList(groupUser,projection));
+					iterableArtist.forEach(new Block<Document>() {
+						public void apply(final Document document2) {
+							System.out.println(document2.toJson()+ " count : " + document.get("total"));
+								
+						}
+					});
+					
+				}
+			});	
+		}else{
+			/*console query
+			 * db.listened.aggregate( [ { $project: { "_id":0, "code": 1, "timeListened": { $size: { "$ifNull": [ "$timeListened", [] ] } } } } ] )
+			 */
+			
+			Document groupByTracks = new Document("$project", new Document("trackId", 1).append("_id", 0).append("timeListened", new Document("$size", new Document( "$ifNull",Arrays.asList("$timeListened",Arrays.asList() ) ))));
+			Document groupByUser = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", "$timeListened")));
+			Document sort = new Document("$sort", new Document("total",order));
+			Document limit = new Document("$limit", n);
+			
+			AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,groupByUser,sort,limit));
+			iterable.forEach(new Block<Document>() {
+				public void apply(final Document document) {
+	
+					/*console query
+					 * db.artists.aggregate( [ { $match: { "songs.trackId": "1c061863-1d3e-4066-aa93-5c9ce0bf72f2" } }, { $project: { "_id":0, "artistId": 1, "artistName": 1 } } ] )
+					 */
+			
+					Document groupUser = new Document("$match", new Document("songs.trackId", document.get("_id")));
+					Document projection = new Document("$project", new Document("_id", 0).append("artistId",1).append("artistName", 1));
+					
+					AggregateIterable<Document> iterableArtist = db.getCollection(COLLECTIONARTISTS).aggregate(asList(groupUser,projection));
+					iterableArtist.forEach(new Block<Document>() {
+						public void apply(final Document document2) {
+							System.out.println(document2.toJson()+ " count : " + document.get("total"));
+								
+						}
+					});
+					
+				}
+			});	
+		}
 		
 	}
 
