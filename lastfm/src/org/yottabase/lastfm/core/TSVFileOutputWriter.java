@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 
 public class TSVFileOutputWriter implements OutputWriter {
 
-	PrintWriter writer = null;
+	private PrintWriter writer = null;
 	
 	public TSVFileOutputWriter(String filename) {
 		
