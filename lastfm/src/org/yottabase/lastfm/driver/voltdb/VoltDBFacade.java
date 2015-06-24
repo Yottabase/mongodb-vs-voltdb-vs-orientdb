@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 
 import org.voltdb.client.Client;
+import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcCallException;
 import org.yottabase.lastfm.core.Facade;
+import org.yottabase.lastfm.driver.voltdb.procedure.Count;
 import org.yottabase.lastfm.driver.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
@@ -28,6 +30,7 @@ public class VoltDBFacade extends Facade{
 		String dqlClean = new StringBuilder()
 			//pulisce il database
 			.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
+			.append("DROP PROCEDURE " + Count.class.getCanonicalName() + " IF EXISTS;")
 			.append("DROP TABLE User IF EXISTS; ")
 			.append("DROP TABLE Artist IF EXISTS; ")
 			.append("DROP TABLE Track IF EXISTS; ")
@@ -65,6 +68,7 @@ public class VoltDBFacade extends Facade{
 		String createProcedures = new StringBuilder()
 			//crea procedura
 			.append("CREATE PROCEDURE FROM CLASS " + InsertListenedTrackRecursive.class.getCanonicalName() + ";")
+			.append("CREATE PROCEDURE FROM CLASS " + Count.class.getCanonicalName() + ";")
 			
 			.toString();
 		
@@ -116,26 +120,55 @@ public class VoltDBFacade extends Facade{
 
 	@Override
 	public void countArtists() {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "Count",	"Artists" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void countTracks() {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "Count",	"Artists" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void countUsers() {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "Count",	"Users" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void countEntities() {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "Count",	"Artists+Tracks+Users" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
