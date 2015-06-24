@@ -18,11 +18,17 @@ public class PropertyFile {
 			propertiesFile.load(inputStream);
 		} 
 		catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (IOException e) {
-			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	public PropertyFile(InputStream inputStream) {
+		try {
+			propertiesFile.load(inputStream);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

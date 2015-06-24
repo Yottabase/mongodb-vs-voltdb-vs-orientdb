@@ -23,9 +23,16 @@ public class BenchmarkMain {
 	
 	public static void main(String[] args) throws IOException {
 
+		PropertyFile config;
+		
 		int n = 10;
 		
-		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
+		if(args.length > 0){
+			config = new PropertyFile(args[0]);	
+		}else{
+			config = new PropertyFile(BenchmarkMain.class.getClassLoader().getResourceAsStream(CONFIG_FILE_PATH));
+		}
+		
 		FacadeManager facadeManager = new FacadeManager(config);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
