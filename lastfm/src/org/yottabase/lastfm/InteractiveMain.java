@@ -3,7 +3,7 @@ package org.yottabase.lastfm;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+//import java.util.Arrays;
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeManager;
 import org.yottabase.lastfm.core.OutputWriter;
@@ -20,7 +20,7 @@ public class InteractiveMain {
 		
 		String facadeName = args[0]; 
 		String methodName = args[1];
-		String[] params = Arrays.copyOfRange(args, 2, args.length);
+		//String[] params = Arrays.copyOfRange(args, 2, args.length);
 		
 		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
 		
