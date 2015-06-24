@@ -494,7 +494,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		/*console query
 		 * db.users.aggregate( [ { $group: { _id: {"country": "$country","gender": "$gender"}, total: { $sum: 1 } } } ])
 		 */
-		
+
 		Document groupByTracks = new Document("$group", new Document("_id", new Document("country","$country").append("gender", "$gender")).append("total", new Document("$sum", 1)));
 		Document sort = new Document("$sort", new Document("total",-1));
 		Document limit = new Document("$limit", 10);
@@ -506,8 +506,8 @@ public class MongoDBAdapter extends AbstractDBFacade {
 
 			}
 		});	
-		
-		
+
+
 
 	}
 
