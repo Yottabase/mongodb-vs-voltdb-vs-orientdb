@@ -1,19 +1,18 @@
 package org.yottabase.lastfm.driver.orientdb;
 
 import java.io.IOException;
-import java.util.Properties;
-
-import org.yottabase.lastfm.core.Config;
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeFactory;
+import org.yottabase.lastfm.core.PropertyFile;
 
 public class OrientDBTest {
 	
+	private static final String CONFIG_FILE_PATH = "config.properties";
+	
 	public static void main(String[] args) throws IOException {
-		Config config = new Config();
-		Properties properties = config.getProperties();
+		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
 		FacadeFactory factory = new OrientDBFacadeFactory();
-		Facade orientdbFacade = factory.createService(properties);
+		Facade orientdbFacade = factory.createService(config);
 		
 		// counts
 		orientdbFacade.countEntities();
@@ -23,7 +22,7 @@ public class OrientDBTest {
 		
 		// avarages
 		orientdbFacade.averageNumberListenedTracksPerUser(false);
-		orientdbFacade.averageNumberSungTracksPerArtist(false);
+		orientdbFacade.averageNumberSungTracksPerArtist();
 		
 		// charts (top/last K)
 		orientdbFacade.usersChart(1, true, false);		// NO DISTINCT

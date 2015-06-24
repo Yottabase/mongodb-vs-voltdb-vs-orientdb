@@ -138,7 +138,7 @@ public class OrientDBFacade extends Facade {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
+	public void averageNumberSungTracksPerArtist() {
 		String querySQL = 
 			  "SELECT avg(out_Sing.size()) "
 			+ "FROM Artist";

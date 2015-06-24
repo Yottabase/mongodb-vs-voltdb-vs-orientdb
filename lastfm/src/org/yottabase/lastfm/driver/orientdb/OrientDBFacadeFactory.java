@@ -1,9 +1,8 @@
 package org.yottabase.lastfm.driver.orientdb;
 
-import java.util.Properties;
-
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeFactory;
+import org.yottabase.lastfm.core.PropertyFile;
 
 import com.orientechnologies.orient.core.intent.OIntentMassiveInsert;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -12,14 +11,14 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 public class OrientDBFacadeFactory implements FacadeFactory {
 
 	@Override
-	public Facade createService(Properties properties) {
+	public Facade createService(PropertyFile properties) {
 		final String PREFIX = "orientdb.";
 
 		// access properties
-		String storage = properties.getProperty(		PREFIX + "storage"		);
-		String db_directory = properties.getProperty(	PREFIX + "db_directory"	);
-		String username = properties.getProperty(		PREFIX + "username"		);
-		String password = properties.getProperty(		PREFIX + "password"		);
+		String storage = properties.get(		PREFIX + "storage"		);
+		String db_directory = properties.get(	PREFIX + "db_directory"	);
+		String username = properties.get(		PREFIX + "username"		);
+		String password = properties.get(		PREFIX + "password"		);
 		
 		// db as a graph
 		OrientGraphFactory factory = new OrientGraphFactory(storage + ":" + db_directory, username, password);
