@@ -13,6 +13,12 @@ public class NoopAdapter extends AbstractDBFacade{
 	}
 	
 	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public void insertUser(User user) {
 		System.out.println("code: " + user.getCode());
 		System.out.println("gender: "+ user.getGender());
@@ -93,7 +99,37 @@ public class NoopAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void tracksListenedTogether(int n) {
+	public void artistByCode(String artistCode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void artistByName(String artistName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void usersByAgeRange(int lowerBound, int upperBound) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tracksSungByArtist(String artistCode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void usersCountByCountry() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void usersCountByCountryAndGender() {
 		// TODO Auto-generated method stub
 		
 	}

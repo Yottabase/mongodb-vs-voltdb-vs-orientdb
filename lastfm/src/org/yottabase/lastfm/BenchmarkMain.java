@@ -166,10 +166,7 @@ public class BenchmarkMain {
 
 			
 			
-			//tracksListenedTogether
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksListenedTogether(n)", true);
-			dbAdapter.tracksListenedTogether(n);
-			methodElapsedTime.pauseAndPrint();
+			// TODO query mancanti più parametri nel properties
 			
 			adapterElapsedTime.pauseAndPrint();
 			writer.close();
