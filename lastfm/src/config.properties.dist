@@ -17,8 +17,9 @@ noop.factory=org.yottabase.lastfm.adapter.noop.NoopAdapterFactory
 voltdb.enabled=false
 voltdb.factory=org.yottabase.lastfm.adapter.voltdb.VoltDBAdapterFactory
 voltdb.host=localhost
-voltdb.username=
-voltdb.password=
+voltdb.username=username
+voltdb.password=password
+voltdb.async_mode=false
 
 #Mongodb
 mongodb.enabled=false
@@ -31,5 +32,7 @@ mongodb.password=password
 orientdb.enabled=false
 orientdb.factory=org.yottabase.lastfm.adapter.orientdb.OrientDBAdapterFactory
 orientdb.host=localhost
+orientdb.storage=plocal
+orientdb.db_directory=/home/user
 orientdb.username=username
 orientdb.password=password
