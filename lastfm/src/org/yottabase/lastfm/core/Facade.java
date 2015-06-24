@@ -59,10 +59,9 @@ public abstract class Facade {
 	public abstract void averageNumberListenedTracksPerUser(boolean uniqueTrack);
 	
 	/**
-	 * Numero di artisti mediamente ascoltati da un utente
-	 * @param uniqueTrack specifica se si considerano solo ascolti di brani diversi
+	 * Numero di tracce mediamente cantate da un artista
 	 */
-	public abstract void averageNumberSungTracksPerArtist(boolean uniqueTrack);
+	public abstract void averageNumberSungTracksPerArtist();
 	
 	/**
 	 * Gli utenti che hanno ascoltato più/meno canzoni

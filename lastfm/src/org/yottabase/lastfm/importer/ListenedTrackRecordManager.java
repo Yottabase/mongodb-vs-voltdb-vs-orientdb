@@ -32,7 +32,7 @@ public class ListenedTrackRecordManager {
 		listenedTrack
 				.setArtistName((artistName.equals("")) ? null : artistName);
 		listenedTrack.setTrackCode((trackCode.equals("")) ? Encryption
-				.toSHA1(trackName) : trackCode);
+				.toSHA1(trackName+artistName) : trackCode);
 		listenedTrack.setTrackName((trackName.equals("")) ? null : trackName);
 
 		if (!time.equals("")) {

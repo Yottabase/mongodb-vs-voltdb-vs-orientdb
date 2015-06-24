@@ -3,16 +3,16 @@ package org.yottabase.lastfm;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Properties;
-
-import org.yottabase.lastfm.core.Config;
+//import java.util.Arrays;
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeManager;
 import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.core.OutputWriterFactory;
+import org.yottabase.lastfm.core.PropertyFile;
 
 public class InteractiveMain {
+	
+	private static final String CONFIG_FILE_PATH = "config.properties";
 	
 	public static void main(String[] args) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
@@ -20,16 +20,15 @@ public class InteractiveMain {
 		
 		String facadeName = args[0]; 
 		String methodName = args[1];
-		String[] params = Arrays.copyOfRange(args, 2, args.length);
+		//String[] params = Arrays.copyOfRange(args, 2, args.length);
 		
-		Config config = new Config();
-		Properties properties = config.getProperties();
+		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
 		
-		FacadeManager facadeManager = new FacadeManager(properties);
+		FacadeManager facadeManager = new FacadeManager(config);
 		Facade facade = facadeManager.getFacade(facadeName);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
-		OutputWriter writer = outputWriterFactory.createService(properties, facade.getClass().getSimpleName() + "_output.txt");
+		OutputWriter writer = outputWriterFactory.createService(config, facade.getClass().getSimpleName() + "_output.txt");
 		facade.setWriter(writer);
 		
 		Method m = Facade.class.getMethod(methodName);

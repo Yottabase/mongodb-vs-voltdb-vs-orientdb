@@ -1,24 +1,24 @@
 package org.yottabase.lastfm.driver.voltdb;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientConfig;
 import org.voltdb.client.ClientFactory;
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeFactory;
+import org.yottabase.lastfm.core.PropertyFile;
 
 public class VoltDBFacadeFactory implements FacadeFactory{
 
 	@Override
-	public Facade createService(Properties properties) {
+	public Facade createService(PropertyFile properties) {
 		
 		Facade facade = null;
 		
-		String host = properties.getProperty("voltdb.host");
-		String username = properties.getProperty("voltdb.username");
-		String password = properties.getProperty("voltdb.password");
+		String host = properties.get("voltdb.host");
+		String username = properties.get("voltdb.username");
+		String password = properties.get("voltdb.password");
 			
 		try {
 			

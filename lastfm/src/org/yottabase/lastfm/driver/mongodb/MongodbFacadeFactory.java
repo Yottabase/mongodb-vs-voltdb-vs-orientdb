@@ -1,10 +1,9 @@
 package org.yottabase.lastfm.driver.mongodb;
 
 import java.util.Arrays;
-import java.util.Properties;
-
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeFactory;
+import org.yottabase.lastfm.core.PropertyFile;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -13,12 +12,12 @@ import com.mongodb.ServerAddress;
 public class MongodbFacadeFactory implements FacadeFactory {
 
 	@Override
-	public Facade createService(Properties properties) {
+	public Facade createService(PropertyFile properties) {
 		Facade driver = null;
 
-		String host = properties.getProperty("mongodb.host");
-		String username = properties.getProperty("mongodb.username");
-		String password = properties.getProperty("mongodb.password");
+		String host = properties.get("mongodb.host");
+		String username = properties.get("mongodb.username");
+		String password = properties.get("mongodb.password");
 
 		MongoCredential credential = MongoCredential.createCredential(username,
 				"lastfm", password.toCharArray());

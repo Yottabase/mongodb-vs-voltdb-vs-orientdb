@@ -200,7 +200,7 @@ public class MongodbFacade extends Facade {
 	}
 
 	@Override
-	public void averageNumberSungTracksPerArtist(boolean uniqueTrack) {
+	public void averageNumberSungTracksPerArtist() {
 		
 		/*console query
 		 * db.artists.aggregate( [ { $project: { "_id":1, "artistId": 1, "total": { $size: "$songs" } } },{$group:{_id: "null",avgQuantity: { $avg: "$total" }}} ] )
