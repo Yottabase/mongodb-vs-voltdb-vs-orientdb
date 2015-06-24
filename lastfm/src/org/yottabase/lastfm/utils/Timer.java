@@ -1,4 +1,4 @@
-package utils;
+package org.yottabase.lastfm.utils;
 
 public class Timer {
 

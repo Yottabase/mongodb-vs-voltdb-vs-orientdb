@@ -1,6 +1,7 @@
 package org.yottabase.lastfm;
 
 import java.io.IOException;
+
 import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.core.DBAdapterManager;
 import org.yottabase.lastfm.core.OutputWriter;
@@ -12,8 +13,7 @@ import org.yottabase.lastfm.importer.ListenedTrackRecordManager;
 import org.yottabase.lastfm.importer.SimpleLineReader;
 import org.yottabase.lastfm.importer.User;
 import org.yottabase.lastfm.importer.UserRecordManager;
-
-import utils.Timer;
+import org.yottabase.lastfm.utils.Timer;
 
 public class BenchmarkMain {
 
