@@ -1,10 +1,10 @@
 package org.yottabase.lastfm.driver.noop;
 
-import org.yottabase.lastfm.core.Facade;
+import org.yottabase.lastfm.core.DBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
-public class NoopFacade extends Facade{
+public class NoopFacade extends DBFacade{
 
 	@Override
 	public void initializeSchema() {

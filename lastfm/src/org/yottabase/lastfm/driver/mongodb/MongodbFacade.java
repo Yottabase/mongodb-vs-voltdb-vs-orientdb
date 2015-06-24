@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.yottabase.lastfm.core.Facade;
+import org.yottabase.lastfm.core.DBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
@@ -22,7 +22,7 @@ import com.mongodb.client.model.IndexOptions;
 
 
 
-public class MongodbFacade extends Facade {
+public class MongodbFacade extends DBFacade {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 

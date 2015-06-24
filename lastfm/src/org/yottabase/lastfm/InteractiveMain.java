@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 //import java.util.Arrays;
-import org.yottabase.lastfm.core.Facade;
-import org.yottabase.lastfm.core.FacadeManager;
+import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.DBFacadeManager;
 import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.core.OutputWriterFactory;
 import org.yottabase.lastfm.core.PropertyFile;
@@ -24,14 +24,14 @@ public class InteractiveMain {
 		
 		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
 		
-		FacadeManager facadeManager = new FacadeManager(config);
-		Facade facade = facadeManager.getFacade(facadeName);
+		DBFacadeManager facadeManager = new DBFacadeManager(config);
+		DBFacade facade = facadeManager.getFacade(facadeName);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
 		OutputWriter writer = outputWriterFactory.createService(config, facade.getClass().getSimpleName() + "_output.txt");
 		facade.setWriter(writer);
 		
-		Method m = Facade.class.getMethod(methodName);
+		Method m = DBFacade.class.getMethod(methodName);
 		
 		long startTime = System.currentTimeMillis();
 		

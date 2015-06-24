@@ -1,13 +1,13 @@
 package org.yottabase.lastfm.driver.noop;
 
-import org.yottabase.lastfm.core.Facade;
-import org.yottabase.lastfm.core.FacadeFactory;
+import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.DBFacadeFactory;
 import org.yottabase.lastfm.core.PropertyFile;
 
-public class NoopFacadeFactory implements FacadeFactory {
+public class NoopFacadeFactory implements DBFacadeFactory {
 
 	@Override
-	public Facade createService(PropertyFile properties) {
+	public DBFacade createService(PropertyFile properties) {
 		
 		return new NoopFacade();
 	}

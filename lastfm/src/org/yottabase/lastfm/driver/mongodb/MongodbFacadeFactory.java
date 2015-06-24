@@ -1,19 +1,19 @@
 package org.yottabase.lastfm.driver.mongodb;
 
 import java.util.Arrays;
-import org.yottabase.lastfm.core.Facade;
-import org.yottabase.lastfm.core.FacadeFactory;
+import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.DBFacadeFactory;
 import org.yottabase.lastfm.core.PropertyFile;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
-public class MongodbFacadeFactory implements FacadeFactory {
+public class MongodbFacadeFactory implements DBFacadeFactory {
 
 	@Override
-	public Facade createService(PropertyFile properties) {
-		Facade driver = null;
+	public DBFacade createService(PropertyFile properties) {
+		DBFacade driver = null;
 
 		String host = properties.get("mongodb.host");
 		String username = properties.get("mongodb.username");

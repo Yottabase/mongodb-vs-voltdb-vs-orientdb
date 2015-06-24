@@ -1,12 +1,12 @@
 package org.yottabase.lastfm.core;
 
-public interface FacadeFactory {
+public interface DBFacadeFactory {
 
 	/**
 	 * Crea un oggetto che interagisce con uno specifico db
 	 * @param properties
 	 * @return
 	 */
-	public Facade createService(PropertyFile properties);
+	public DBFacade createService(PropertyFile properties);
 	
 }

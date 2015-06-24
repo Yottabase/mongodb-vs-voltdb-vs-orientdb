@@ -3,11 +3,11 @@ package org.yottabase.lastfm.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FacadeManager {
+public class DBFacadeManager {
 	
 	private PropertyFile properties;
 	
-	public FacadeManager(PropertyFile properties) {
+	public DBFacadeManager(PropertyFile properties) {
 		super();
 		this.properties = properties;
 	}
@@ -20,11 +20,11 @@ public class FacadeManager {
 		this.properties = properties;
 	}
 
-	public List<Facade> getFacades(){
+	public List<DBFacade> getFacades(){
 		
 		String[] facadesName = properties.get("supported_facades").split(",");
 
-		List<Facade> facades = new ArrayList<Facade>();
+		List<DBFacade> facades = new ArrayList<DBFacade>();
 
 		for (String facadeName : facadesName) {
 			String enabledFlagKey = facadeName + ".enabled";
@@ -37,8 +37,8 @@ public class FacadeManager {
 		return facades;
 	}
 	
-	public Facade getFacade(String facadeName){
-		Facade facade = null;
+	public DBFacade getFacade(String facadeName){
+		DBFacade facade = null;
 		
 		
 		String facadeFactoryKey = facadeName + ".factory";
@@ -46,7 +46,7 @@ public class FacadeManager {
 		String factoryClassName = properties.get(facadeFactoryKey);
 
 		try {
-			FacadeFactory facadeFactory = (FacadeFactory) Class
+			DBFacadeFactory facadeFactory = (DBFacadeFactory) Class
 					.forName(factoryClassName).newInstance();
 			facade = facadeFactory.createService(properties);
 

@@ -1,8 +1,8 @@
 package org.yottabase.lastfm;
 
 import java.io.IOException;
-import org.yottabase.lastfm.core.Facade;
-import org.yottabase.lastfm.core.FacadeManager;
+import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.DBFacadeManager;
 import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.core.OutputWriterFactory;
 import org.yottabase.lastfm.core.PropertyFile;
@@ -33,7 +33,7 @@ public class BenchmarkMain {
 			config = new PropertyFile(BenchmarkMain.class.getClassLoader().getResourceAsStream(CONFIG_FILE_PATH));
 		}
 		
-		FacadeManager facadeManager = new FacadeManager(config);
+		DBFacadeManager facadeManager = new DBFacadeManager(config);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
 		
@@ -41,7 +41,7 @@ public class BenchmarkMain {
 		Timer facadeElapsedTime;
 		Timer methodElapsedTime;
 		
-		for (Facade facade : facadeManager.getFacades()) {
+		for (DBFacade facade : facadeManager.getFacades()) {
 			String facadeName = facade.getClass().getSimpleName();
 			
 			facadeElapsedTime = new Timer(facadeName, true);
@@ -178,7 +178,7 @@ public class BenchmarkMain {
 		globalElapsedTime.pauseAndPrint();
 	}	
 
-	public static void importUserDataset(String filepath, Facade facade) {
+	public static void importUserDataset(String filepath, DBFacade facade) {
 		
 		LineReader reader = new SimpleLineReader(filepath);
 		UserRecordManager recordManager = new UserRecordManager();
@@ -197,7 +197,7 @@ public class BenchmarkMain {
 
 	}
 	
-	public static void importListenedTrackDataset(String filepath, Facade facade){
+	public static void importListenedTrackDataset(String filepath, DBFacade facade){
 		LineReader reader = new SimpleLineReader(filepath);
 		ListenedTrackRecordManager recordManager = new ListenedTrackRecordManager();
 

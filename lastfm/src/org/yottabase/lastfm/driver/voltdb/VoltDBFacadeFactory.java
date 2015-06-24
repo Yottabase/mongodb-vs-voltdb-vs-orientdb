@@ -5,16 +5,16 @@ import java.io.IOException;
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientConfig;
 import org.voltdb.client.ClientFactory;
-import org.yottabase.lastfm.core.Facade;
-import org.yottabase.lastfm.core.FacadeFactory;
+import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.DBFacadeFactory;
 import org.yottabase.lastfm.core.PropertyFile;
 
-public class VoltDBFacadeFactory implements FacadeFactory{
+public class VoltDBFacadeFactory implements DBFacadeFactory{
 
 	@Override
-	public Facade createService(PropertyFile properties) {
+	public DBFacade createService(PropertyFile properties) {
 		
-		Facade facade = null;
+		DBFacade facade = null;
 		
 		String host = properties.get("voltdb.host");
 		String username = properties.get("voltdb.username");
