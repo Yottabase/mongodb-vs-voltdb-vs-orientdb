@@ -1,6 +1,6 @@
-package org.yottabase.lastfm.driver.orientdb;
+package org.yottabase.lastfm.adapter.orientdb;
 
-import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.core.DBFacadeFactory;
 import org.yottabase.lastfm.core.PropertyFile;
 
@@ -8,10 +8,10 @@ import com.orientechnologies.orient.core.intent.OIntentMassiveInsert;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public class OrientDBFacadeFactory implements DBFacadeFactory {
+public class OrientDBAdapterFactory implements DBFacadeFactory {
 
 	@Override
-	public DBFacade createService(PropertyFile properties) {
+	public AbstractDBFacade createService(PropertyFile properties) {
 		final String PREFIX = "orientdb.";
 
 		// access properties
@@ -29,7 +29,7 @@ public class OrientDBFacadeFactory implements DBFacadeFactory {
 		graph.setStandardElementConstraints(false);			// allows null values (and more..) for properties
 		graph.getRawGraph().declareIntent(new OIntentMassiveInsert());
 		
-		DBFacade drvr = new OrientDBFacade(graph);
+		AbstractDBFacade drvr = new OrientDBAdapter(graph);
 		return drvr;
 	}
 

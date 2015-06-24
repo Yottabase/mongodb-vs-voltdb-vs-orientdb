@@ -1,8 +1,8 @@
 package org.yottabase.lastfm;
 
 import java.io.IOException;
-import org.yottabase.lastfm.core.DBFacade;
-import org.yottabase.lastfm.core.DBFacadeManager;
+import org.yottabase.lastfm.core.AbstractDBFacade;
+import org.yottabase.lastfm.core.DBAdapterManager;
 import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.core.OutputWriterFactory;
 import org.yottabase.lastfm.core.PropertyFile;
@@ -33,152 +33,152 @@ public class BenchmarkMain {
 			config = new PropertyFile(BenchmarkMain.class.getClassLoader().getResourceAsStream(CONFIG_FILE_PATH));
 		}
 		
-		DBFacadeManager facadeManager = new DBFacadeManager(config);
+		DBAdapterManager adapterManager = new DBAdapterManager(config);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
 		
 		Timer globalElapsedTime = new Timer("Total", true);
-		Timer facadeElapsedTime;
+		Timer adapterElapsedTime;
 		Timer methodElapsedTime;
 		
-		for (DBFacade facade : facadeManager.getFacades()) {
-			String facadeName = facade.getClass().getSimpleName();
+		for (AbstractDBFacade dbAdapter : adapterManager.getAdapters()) {
+			String adapterName = dbAdapter.getClass().getSimpleName();
 			
-			facadeElapsedTime = new Timer(facadeName, true);
+			adapterElapsedTime = new Timer(adapterName, true);
 			
-			OutputWriter writer = outputWriterFactory.createService(config, facade.getClass().getSimpleName() + "_output.txt");
-			facade.setWriter(writer);
+			OutputWriter writer = outputWriterFactory.createService(config, dbAdapter.getClass().getSimpleName() + "_output.txt");
+			dbAdapter.setWriter(writer);
 			
 			
 			//BENCHMARK
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "initializeSchema()", true);
-			facade.initializeSchema();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "initializeSchema()", true);
+			dbAdapter.initializeSchema();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "insertUser()", true);
-			importUserDataset(config.get("dataset.user.filepath"), facade);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "insertUser()", true);
+			importUserDataset(config.get("dataset.user.filepath"), dbAdapter);
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "insertListenedTrack()", true);
-			importListenedTrackDataset(config.get("dataset.listened_tracks.filepath"), facade);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "insertListenedTrack()", true);
+			importListenedTrackDataset(config.get("dataset.listened_tracks.filepath"), dbAdapter);
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countArtists()", true);
-			facade.countArtists();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countArtists()", true);
+			dbAdapter.countArtists();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countTracks()", true);
-			facade.countTracks();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countTracks()", true);
+			dbAdapter.countTracks();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countUsers()", true);
-			facade.countUsers();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countUsers()", true);
+			dbAdapter.countUsers();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "countEntities()", true);
-			facade.countEntities();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countEntities()", true);
+			dbAdapter.countEntities();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "averageNumberListenedTracksPerUser(true)", true);
-			facade.averageNumberListenedTracksPerUser(true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberListenedTracksPerUser(true)", true);
+			dbAdapter.averageNumberListenedTracksPerUser(true);
 			methodElapsedTime.pauseAndPrint();
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "averageNumberListenedTracksPerUser(false)", true);
-			facade.averageNumberListenedTracksPerUser(false);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberListenedTracksPerUser(false)", true);
+			dbAdapter.averageNumberListenedTracksPerUser(false);
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "averageNumberSungTracksPerArtist()", true);
-			facade.averageNumberSungTracksPerArtist();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberSungTracksPerArtist()", true);
+			dbAdapter.averageNumberSungTracksPerArtist();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			//usersChart
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, true, true)", true);
-			facade.usersChart(n, true, true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, true, true)", true);
+			dbAdapter.usersChart(n, true, true);
 			methodElapsedTime.pauseAndPrint();
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, false, true)", true);
-			facade.usersChart(n, false, true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, false, true)", true);
+			dbAdapter.usersChart(n, false, true);
 			methodElapsedTime.pauseAndPrint();			
 
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, true, false)", true);
-			facade.usersChart(n, true, false);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, true, false)", true);
+			dbAdapter.usersChart(n, true, false);
 			methodElapsedTime.pauseAndPrint();			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "usersChart(n, false, false)", true);
-			facade.usersChart(n, false, false);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, false, false)", true);
+			dbAdapter.usersChart(n, false, false);
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			//tracksChart
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, true, true)", true);
-			facade.tracksChart(n, true, true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, true, true)", true);
+			dbAdapter.tracksChart(n, true, true);
 			methodElapsedTime.pauseAndPrint();
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, false, true)", true);
-			facade.tracksChart(n, false, true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, false, true)", true);
+			dbAdapter.tracksChart(n, false, true);
 			methodElapsedTime.pauseAndPrint();			
 
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, true, false)", true);
-			facade.tracksChart(n, true, false);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, true, false)", true);
+			dbAdapter.tracksChart(n, true, false);
 			methodElapsedTime.pauseAndPrint();			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksChart(n, false, false)", true);
-			facade.tracksChart(n, false, false);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, false, false)", true);
+			dbAdapter.tracksChart(n, false, false);
 			methodElapsedTime.pauseAndPrint();			
 
 			
 			
 			//artistsChart
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, true, true)", true);
-			facade.artistsChart(n, true, true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, true, true)", true);
+			dbAdapter.artistsChart(n, true, true);
 			methodElapsedTime.pauseAndPrint();
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, false, true)", true);
-			facade.artistsChart(n, false, true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, false, true)", true);
+			dbAdapter.artistsChart(n, false, true);
 			methodElapsedTime.pauseAndPrint();			
 
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, true, false)", true);
-			facade.artistsChart(n, true, false);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, true, false)", true);
+			dbAdapter.artistsChart(n, true, false);
 			methodElapsedTime.pauseAndPrint();			
 			
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "artistsChart(n, false, false)", true);
-			facade.artistsChart(n, false, false);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, false, false)", true);
+			dbAdapter.artistsChart(n, false, false);
 			methodElapsedTime.pauseAndPrint();						
 
 			
 			
 			//tracksListenedTogether
-			methodElapsedTime = new Timer(facadeName + SEPARATOR + "tracksListenedTogether(n)", true);
-			facade.tracksListenedTogether(n);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksListenedTogether(n)", true);
+			dbAdapter.tracksListenedTogether(n);
 			methodElapsedTime.pauseAndPrint();
 			
-			facadeElapsedTime.pauseAndPrint();
+			adapterElapsedTime.pauseAndPrint();
 			writer.close();
 		}
 		
 		globalElapsedTime.pauseAndPrint();
 	}	
 
-	public static void importUserDataset(String filepath, DBFacade facade) {
+	public static void importUserDataset(String filepath, AbstractDBFacade dbAdapter) {
 		
 		LineReader reader = new SimpleLineReader(filepath);
 		UserRecordManager recordManager = new UserRecordManager();
@@ -192,12 +192,12 @@ public class BenchmarkMain {
 
 			user = recordManager.getUserFromLine(line);
 
-			facade.insertUser(user);
+			dbAdapter.insertUser(user);
 		}
 
 	}
 	
-	public static void importListenedTrackDataset(String filepath, DBFacade facade){
+	public static void importListenedTrackDataset(String filepath, AbstractDBFacade dbAdapter){
 		LineReader reader = new SimpleLineReader(filepath);
 		ListenedTrackRecordManager recordManager = new ListenedTrackRecordManager();
 
@@ -210,7 +210,7 @@ public class BenchmarkMain {
 
 			listenedTrack = recordManager.getListenedTrackFromLine(line);
 
-			facade.insertListenedTrack(listenedTrack);
+			dbAdapter.insertListenedTrack(listenedTrack);
 		}
 	}
 

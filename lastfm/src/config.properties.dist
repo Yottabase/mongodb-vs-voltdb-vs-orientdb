@@ -7,29 +7,29 @@ output.type=filesystem
 output.folder=/tmp
 
 #general
-supported_facades=noop,voltdb,mongodb,orientdb
+supported_adapters=noop,voltdb,mongodb,orientdb
 
 #Noop
 noop.enabled=true
-noop.factory=org.yottabase.lastfm.driver.noop.NoopDriverFactory
+noop.factory=org.yottabase.lastfm.adapter.noop.NoopAdapterFactory
 
 #Voltdb
 voltdb.enabled=false
-voltdb.factory=org.yottabase.lastfm.driver.voltdb.VoltDBFacadeFactory
+voltdb.factory=org.yottabase.lastfm.adapter.voltdb.VoltDBAdapterFactory
 voltdb.host=localhost
 voltdb.username=
 voltdb.password=
 
 #Mongodb
 mongodb.enabled=false
-mongodb.factory=org.yottabase.lastfm.driver.mongodb.MongodbDriverFactory
+mongodb.factory=org.yottabase.lastfm.adapter.mongodb.MongoDBAdapterFactory
 mongodb.host=localhost
 mongodb.username=username
 mongodb.password=password
 
 #Orientdb
 orientdb.enabled=false
-orientdb.factory=org.yottabase.lastfm.driver.orientdb.OrientdbDriverFactory
+orientdb.factory=org.yottabase.lastfm.adapter.orientdb.OrientDBAdapterFactory
 orientdb.host=localhost
 orientdb.username=username
 orientdb.password=password

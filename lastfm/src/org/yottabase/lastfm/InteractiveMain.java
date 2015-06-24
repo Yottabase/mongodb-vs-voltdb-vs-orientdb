@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 //import java.util.Arrays;
-import org.yottabase.lastfm.core.DBFacade;
-import org.yottabase.lastfm.core.DBFacadeManager;
+import org.yottabase.lastfm.core.AbstractDBFacade;
+import org.yottabase.lastfm.core.DBAdapterManager;
 import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.core.OutputWriterFactory;
 import org.yottabase.lastfm.core.PropertyFile;
@@ -18,24 +18,24 @@ public class InteractiveMain {
 
 		args = new String[] {"noop", "countUsers", "10", "true", "true"};
 		
-		String facadeName = args[0]; 
+		String adapterName = args[0]; 
 		String methodName = args[1];
 		//String[] params = Arrays.copyOfRange(args, 2, args.length);
 		
 		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
 		
-		DBFacadeManager facadeManager = new DBFacadeManager(config);
-		DBFacade facade = facadeManager.getFacade(facadeName);
+		DBAdapterManager adapterManager = new DBAdapterManager(config);
+		AbstractDBFacade adapter = adapterManager.getAdapter(adapterName);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
-		OutputWriter writer = outputWriterFactory.createService(config, facade.getClass().getSimpleName() + "_output.txt");
-		facade.setWriter(writer);
+		OutputWriter writer = outputWriterFactory.createService(config, adapter.getClass().getSimpleName() + "_output.txt");
+		adapter.setWriter(writer);
 		
-		Method m = DBFacade.class.getMethod(methodName);
+		Method m = AbstractDBFacade.class.getMethod(methodName);
 		
 		long startTime = System.currentTimeMillis();
 		
-        m.invoke(facade); //TODO aggiungere parametri
+        m.invoke(adapter); //TODO aggiungere parametri
         
         System.out.println((System.currentTimeMillis() - startTime));
 					

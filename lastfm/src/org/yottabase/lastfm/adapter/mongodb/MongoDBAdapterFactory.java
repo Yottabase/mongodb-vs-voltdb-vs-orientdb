@@ -1,7 +1,7 @@
-package org.yottabase.lastfm.driver.mongodb;
+package org.yottabase.lastfm.adapter.mongodb;
 
 import java.util.Arrays;
-import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.core.DBFacadeFactory;
 import org.yottabase.lastfm.core.PropertyFile;
 
@@ -9,11 +9,11 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
-public class MongodbFacadeFactory implements DBFacadeFactory {
+public class MongoDBAdapterFactory implements DBFacadeFactory {
 
 	@Override
-	public DBFacade createService(PropertyFile properties) {
-		DBFacade driver = null;
+	public AbstractDBFacade createService(PropertyFile properties) {
+		AbstractDBFacade driver = null;
 
 		String host = properties.get("mongodb.host");
 		String username = properties.get("mongodb.username");
@@ -25,7 +25,7 @@ public class MongodbFacadeFactory implements DBFacadeFactory {
 		MongoClient mongoClient = new MongoClient(
 				new ServerAddress(host, 27017), Arrays.asList(credential));
 
-		driver = new MongodbFacade(mongoClient);
+		driver = new MongoDBAdapter(mongoClient);
 
 		return driver;
 	}

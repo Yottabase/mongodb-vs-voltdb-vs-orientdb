@@ -1,4 +1,4 @@
-package org.yottabase.lastfm.driver.voltdb;
+package org.yottabase.lastfm.adapter.voltdb;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,13 +6,13 @@ import java.io.IOException;
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcCallException;
-import org.yottabase.lastfm.core.DBFacade;
-import org.yottabase.lastfm.driver.voltdb.procedure.Count;
-import org.yottabase.lastfm.driver.voltdb.procedure.InsertListenedTrackRecursive;
+import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
+import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
+import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
-public class VoltDBFacade extends DBFacade{
+public class VoltDBAdapter extends AbstractDBFacade{
 
 	private static final String PROCEDURE_ADHOC = "@AdHoc";
 	
@@ -20,7 +20,7 @@ public class VoltDBFacade extends DBFacade{
 	
 	private Client client;
 	
-	public VoltDBFacade(Client client) {
+	public VoltDBAdapter(Client client) {
 		this.client = client;
 	}
 

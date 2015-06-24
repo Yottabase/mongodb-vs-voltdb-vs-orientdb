@@ -7,6 +7,6 @@ public interface DBFacadeFactory {
 	 * @param properties
 	 * @return
 	 */
-	public DBFacade createService(PropertyFile properties);
+	public AbstractDBFacade createService(PropertyFile properties);
 	
 }

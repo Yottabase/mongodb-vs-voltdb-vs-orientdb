@@ -1,4 +1,4 @@
-package org.yottabase.lastfm.driver.voltdb.procedure;
+package org.yottabase.lastfm.adapter.voltdb.procedure;
 
 import java.util.Date;
 

@@ -1,7 +1,7 @@
-package org.yottabase.lastfm.driver.orientdb;
+package org.yottabase.lastfm.adapter.orientdb;
 
 import java.io.IOException;
-import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.core.DBFacadeFactory;
 import org.yottabase.lastfm.core.PropertyFile;
 
@@ -11,8 +11,8 @@ public class OrientDBTest {
 	
 	public static void main(String[] args) throws IOException {
 		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
-		DBFacadeFactory factory = new OrientDBFacadeFactory();
-		DBFacade orientdbFacade = factory.createService(config);
+		DBFacadeFactory factory = new OrientDBAdapterFactory();
+		AbstractDBFacade orientdbFacade = factory.createService(config);
 		
 		// counts
 		orientdbFacade.countEntities();

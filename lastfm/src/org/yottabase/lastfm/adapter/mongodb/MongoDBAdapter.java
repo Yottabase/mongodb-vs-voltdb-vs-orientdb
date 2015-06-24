@@ -1,4 +1,4 @@
-package org.yottabase.lastfm.driver.mongodb;
+package org.yottabase.lastfm.adapter.mongodb;
 
 import static java.util.Arrays.asList;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
@@ -22,7 +22,7 @@ import com.mongodb.client.model.IndexOptions;
 
 
 
-public class MongodbFacade extends DBFacade {
+public class MongoDBAdapter extends AbstractDBFacade {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
@@ -31,7 +31,7 @@ public class MongodbFacade extends DBFacade {
 	private final static String COLLECTIONARTISTS = "artists";
 	private final static String COLLECTIONLISTENED = "listened";
 
-	public MongodbFacade(MongoClient client) {
+	public MongoDBAdapter(MongoClient client) {
 		this.mongoClient = client;
 		db = mongoClient.getDatabase(DATABASE);
 	}

@@ -1,6 +1,6 @@
-package org.yottabase.lastfm.driver.orientdb;
+package org.yottabase.lastfm.adapter.orientdb;
 
-import org.yottabase.lastfm.core.DBFacade;
+import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
 
@@ -13,11 +13,11 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
-public class OrientDBFacade extends DBFacade {
+public class OrientDBAdapter extends AbstractDBFacade {
 	
 	private OrientGraph graph;
 
-	public OrientDBFacade(OrientGraph graph) {
+	public OrientDBAdapter(OrientGraph graph) {
 		this.graph = graph;
 	}
 
