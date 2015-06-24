@@ -21,6 +21,11 @@ public abstract class AbstractDBFacade {
 	public abstract void initializeSchema();
 	
 	/**
+	 * Chiude il database
+	 */
+	public abstract void close();
+	
+	/**
 	 * Aggiunge un profilo al database
 	 * @param user
 	 */
@@ -87,11 +92,45 @@ public abstract class AbstractDBFacade {
 	 */
 	public abstract void artistsChart(int n, boolean top, boolean uniqueTracks);
 	
-	/**
-	 * Le top n tracce più ascoltate insieme
-	 */
-	public abstract void tracksListenedTogether(int n);
+//	/**
+//	 * Le top n tracce più ascoltate insieme
+//	 */
+//	public abstract void tracksListenedTogether(int n);
 	
-	//TODO query con data
+	/**
+	 * L'artista corrispondente al codice
+	 * @param artistCode è il codice dell'artista
+	 */
+	public abstract void artistByCode(String artistCode);
+	
+	/**
+	 * Il primo artista corrispondente al nome
+	 * @param artistName è il nome dell'artista
+	 */
+	public abstract void artistByName(String artistName);
+	
+	/**
+	 * L'insieme degli utenti aventi età compresa nella fascia specificata
+	 * @param lowerBound è l'età minima (inclusa)
+	 * @param upperBound è l'età massima (inclusa)
+	 */
+	public abstract void usersByAgeRange(int lowerBound, int upperBound);
+	
+	/**
+	 * Le tracce cantate dall'artista specificato
+	 * @param artistCode è il codice dell'artista
+	 */
+	public abstract void tracksSungByArtist(String artistCode);
+	
+	/**
+	 * Il coteggio degli utenti registrati per ogni differente paese
+	 */
+	public abstract void usersCountByCountry();
+	
+	/**
+	 * Il coteggio degli utenti registrati per ogni differente paese
+	 * divisi per sesso
+	 */
+	public abstract void usersCountByCountryAndGender();
 	
 }
