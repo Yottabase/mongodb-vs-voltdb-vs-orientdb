@@ -1,16 +1,14 @@
 package org.yottabase.lastfm.core;
 
-import java.util.Properties;
-
 public class OutputWriterFactory {
 
-	public OutputWriter createService(Properties properties, String filename) {
+	public OutputWriter createService(PropertyFile properties, String filename) {
 
 		OutputWriter writer = null;
 
-		switch (properties.getProperty("output.type")) {
+		switch (properties.get("output.type")) {
 			case "filesystem":
-				String filepath = properties.getProperty("output.folder") + "/" + filename;
+				String filepath = properties.get("output.folder") + "/" + filename;
 				writer = new TSVFileOutputWriter(filepath);
 				break;
 

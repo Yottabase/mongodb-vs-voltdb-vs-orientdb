@@ -1,7 +1,5 @@
 package org.yottabase.lastfm.core;
 
-import java.util.Properties;
-
 public interface FacadeFactory {
 
 	/**
@@ -9,6 +7,6 @@ public interface FacadeFactory {
 	 * @param properties
 	 * @return
 	 */
-	public Facade createService(Properties properties);
+	public Facade createService(PropertyFile properties);
 	
 }

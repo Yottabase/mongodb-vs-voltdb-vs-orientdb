@@ -1,13 +1,11 @@
 package org.yottabase.lastfm;
 
 import java.io.IOException;
-import java.util.Properties;
-
-import org.yottabase.lastfm.core.Config;
 import org.yottabase.lastfm.core.Facade;
 import org.yottabase.lastfm.core.FacadeManager;
 import org.yottabase.lastfm.core.OutputWriter;
 import org.yottabase.lastfm.core.OutputWriterFactory;
+import org.yottabase.lastfm.core.PropertyFile;
 import org.yottabase.lastfm.importer.LineReader;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.ListenedTrackRecordManager;
@@ -21,13 +19,14 @@ public class BenchmarkMain {
 
 	private static final String SEPARATOR = "\t";
 	
+	private static final String CONFIG_FILE_PATH = "config.properties";
+	
 	public static void main(String[] args) throws IOException {
 
 		int n = 10;
 		
-		Config config = new Config();
-		Properties properties = config.getProperties();
-		FacadeManager facadeManager = new FacadeManager(properties);
+		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
+		FacadeManager facadeManager = new FacadeManager(config);
 		
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
 		
@@ -40,7 +39,7 @@ public class BenchmarkMain {
 			
 			facadeElapsedTime = new Timer(facadeName, true);
 			
-			OutputWriter writer = outputWriterFactory.createService(properties, facade.getClass().getSimpleName() + "_output.txt");
+			OutputWriter writer = outputWriterFactory.createService(config, facade.getClass().getSimpleName() + "_output.txt");
 			facade.setWriter(writer);
 			
 			
@@ -52,13 +51,13 @@ public class BenchmarkMain {
 			
 			
 			methodElapsedTime = new Timer(facadeName + SEPARATOR + "insertUser()", true);
-			importUserDataset(properties.getProperty("dataset.user.filepath"), facade);
+			importUserDataset(config.get("dataset.user.filepath"), facade);
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			methodElapsedTime = new Timer(facadeName + SEPARATOR + "insertListenedTrack()", true);
-			importListenedTrackDataset(properties.getProperty("dataset.listened_tracks.filepath"), facade);
+			importListenedTrackDataset(config.get("dataset.listened_tracks.filepath"), facade);
 			methodElapsedTime.pauseAndPrint();
 			
 			
