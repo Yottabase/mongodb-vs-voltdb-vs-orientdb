@@ -19,6 +19,12 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	
 	private final File procedureJar = new File("resources/voltdbProcedure.jar");
 	
+	private final String[] proceduresNames = {
+		InsertListenedTrackRecursive.class.getCanonicalName(),
+		Count.class.getCanonicalName(),
+		AverageNumberListenedTracksPerUser.class.getCanonicalName()
+	};
+	
 	private Client client;
 	
 	public VoltDBAdapter(Client client) {
@@ -27,18 +33,19 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void initializeSchema() {
-		
+
+		//pulisce il database
 		String dqlClean = new StringBuilder()
-			//pulisce il database
-			.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
-			.append("DROP PROCEDURE " + Count.class.getCanonicalName() + " IF EXISTS;")
-			.append("DROP PROCEDURE " + AverageNumberListenedTracksPerUser.class.getCanonicalName() + " IF EXISTS;")
 			.append("DROP TABLE User IF EXISTS; ")
 			.append("DROP TABLE Artist IF EXISTS; ")
 			.append("DROP TABLE Track IF EXISTS; ")
 			.append("DROP TABLE ListenedTrack IF EXISTS; ")
-		
 			.toString();
+		
+		for (int i = 0; i < proceduresNames.length; i++) {
+			String name = proceduresNames[i];
+			dqlClean += "DROP PROCEDURE " + name + " IF EXISTS;";
+		}
 		
 		String dql = new StringBuilder()
 			//crea tabella User
@@ -67,13 +74,12 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			
 			.toString();
 		
-		String createProcedures = new StringBuilder()
-			//crea procedura
-			.append("CREATE PROCEDURE FROM CLASS " + InsertListenedTrackRecursive.class.getCanonicalName() + ";")
-			.append("CREATE PROCEDURE FROM CLASS " + Count.class.getCanonicalName() + ";")
-			.append("CREATE PROCEDURE FROM CLASS " + AverageNumberListenedTracksPerUser.class.getCanonicalName() + ";")
-			
-			.toString();
+		
+		String createProcedures = "";
+		for (int i = 0; i < proceduresNames.length; i++) {
+			String name = proceduresNames[i];
+			createProcedures += "CREATE PROCEDURE FROM CLASS " + name + ";";
+		}
 		
 		try {
 			
