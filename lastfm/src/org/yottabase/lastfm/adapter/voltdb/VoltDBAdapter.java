@@ -3,11 +3,21 @@ package org.yottabase.lastfm.adapter.voltdb;
 import java.io.File;
 import java.io.IOException;
 
+import org.voltdb.VoltTable;
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcCallException;
+import org.yottabase.lastfm.adapter.voltdb.procedure.ArtistsChart;
+import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberListenedTracksPerUser;
+import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberSungTracksPerArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
+import org.yottabase.lastfm.adapter.voltdb.procedure.GetArtist;
+import org.yottabase.lastfm.adapter.voltdb.procedure.GetTracksByArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
+import org.yottabase.lastfm.adapter.voltdb.procedure.TracksChart;
+import org.yottabase.lastfm.adapter.voltdb.procedure.UsersByAgeRange;
+import org.yottabase.lastfm.adapter.voltdb.procedure.UsersChart;
+import org.yottabase.lastfm.adapter.voltdb.procedure.UsersStats;
 import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
@@ -18,6 +28,20 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	
 	private final File procedureJar = new File("resources/voltdbProcedure.jar");
 	
+	private final String[] proceduresNames = {
+		InsertListenedTrackRecursive.class.getCanonicalName(),
+		Count.class.getCanonicalName(),
+		AverageNumberListenedTracksPerUser.class.getCanonicalName(),
+		AverageNumberSungTracksPerArtist.class.getCanonicalName(),
+		UsersChart.class.getCanonicalName(),
+		TracksChart.class.getCanonicalName(),
+		ArtistsChart.class.getCanonicalName(),
+		GetArtist.class.getCanonicalName(),
+		UsersByAgeRange.class.getCanonicalName(),
+		GetTracksByArtist.class.getCanonicalName(),
+		UsersStats.class.getCanonicalName(),
+	};
+	
 	private Client client;
 	
 	public VoltDBAdapter(Client client) {
@@ -26,17 +50,22 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void initializeSchema() {
-		
+
+		//pulisce il database
 		String dqlClean = new StringBuilder()
-			//pulisce il database
-			.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
-			.append("DROP PROCEDURE " + Count.class.getCanonicalName() + " IF EXISTS;")
 			.append("DROP TABLE User IF EXISTS; ")
 			.append("DROP TABLE Artist IF EXISTS; ")
 			.append("DROP TABLE Track IF EXISTS; ")
 			.append("DROP TABLE ListenedTrack IF EXISTS; ")
-		
+			.append("DROP TABLE ListenedTrack_TrackCode IF EXISTS; ")
+			.append("DROP TABLE ListenedTrack_UserCode IF EXISTS; ")
+			.append("DROP TABLE Track_ArtistCode IF EXISTS; ")
 			.toString();
+		
+		for (int i = 0; i < proceduresNames.length; i++) {
+			String name = proceduresNames[i];
+			dqlClean += "DROP PROCEDURE " + name + " IF EXISTS;";
+		}
 		
 		String dql = new StringBuilder()
 			//crea tabella User
@@ -56,21 +85,24 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			.append("Code VARCHAR NOT NULL, Name VARCHAR, ArtistCode VARCHAR,")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
+			.append("CREATE INDEX Track_ArtistCode ON Track ( ArtistCode );")
 			
 			//crea tabella ListenedTrack
 			.append("CREATE TABLE ListenedTrack ( ")
 			.append("Time TIMESTAMP, TrackCode VARCHAR, UserCode VARCHAR,")
 			.append("PRIMARY KEY (Time, TrackCode, UserCode)")
 			.append(");")
+			.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );")
+			.append("CREATE INDEX ListenedTrack_UserCode ON ListenedTrack ( UserCode );")
 			
 			.toString();
 		
-		String createProcedures = new StringBuilder()
-			//crea procedura
-			.append("CREATE PROCEDURE FROM CLASS " + InsertListenedTrackRecursive.class.getCanonicalName() + ";")
-			.append("CREATE PROCEDURE FROM CLASS " + Count.class.getCanonicalName() + ";")
-			
-			.toString();
+		
+		String createProcedures = "";
+		for (int i = 0; i < proceduresNames.length; i++) {
+			String name = proceduresNames[i];
+			createProcedures += "CREATE PROCEDURE FROM CLASS " + name + ";";
+		}
 		
 		try {
 			
@@ -85,12 +117,6 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		
 	}
 	
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void insertUser(User user) {
 		try {
@@ -179,67 +205,192 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "AverageNumberListenedTracksPerUser" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void averageNumberSungTracksPerArtist() {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "AverageNumberSungTracksPerArtist" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void usersChart(int n, boolean top, boolean uniqueTrack) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "UsersChart", n,  (top ? "DESC" : "ASC") );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(
+	        			table.getString(0), 
+	        			table.getString(1), 
+	        			Long.toString(table.getLong(2)),
+	        			table.getString(3),
+	        			"data"
+		        	);
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "TracksChart", n,  (top ? "DESC" : "ASC") );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "ArtistsChart", n,  (top ? "DESC" : "ASC") );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void artistByCode(String artistCode) {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "GetArtist", "CODE", artistCode );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void artistByName(String artistName) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "GetArtist", "NAME", artistName );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void usersByAgeRange(int lowerBound, int upperBound) {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "UsersByAgeRange", lowerBound, upperBound );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(
+	        			table.getString(0), 
+	        			table.getString(1), 
+	        			Long.toString(table.getLong(2)),
+	        			table.getString(3),
+	        			"data"
+		        	);
+		        }
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void tracksSungByArtist(String artistCode) {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "GetTracksByArtist", artistCode );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void usersCountByCountry() {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "UsersStats", "Country");
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), Long.toString(table.getLong(1)));
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void usersCountByCountryAndGender() {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "UsersStats", "Country+Gender");
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public void close() {
+		try {
+			client.close();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
