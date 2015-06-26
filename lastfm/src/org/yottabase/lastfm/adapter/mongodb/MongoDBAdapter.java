@@ -454,9 +454,9 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 
-				Document parzialOutput = (Document) document.get("_id");
-				String country = (String) parzialOutput.get("country");
-				String gender = (String) parzialOutput.get("gender");
+				Document parcialOutput = (Document) document.get("_id");
+				String country = (String) parcialOutput.get("country");
+				String gender = (String) parcialOutput.get("gender");
 
 				if(country != null && gender != null ){
 					String output = country  + gender + document.get("total");

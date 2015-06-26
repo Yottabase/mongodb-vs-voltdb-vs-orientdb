@@ -226,10 +226,10 @@ public class BenchmarkMain {
 
 
 			//usersCountByCountryAndGender
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersCountByCountryAndGender()", true);
-//			writer.writeHeader("country", "gender", "count");
-//			dbAdapter.usersCountByCountryAndGender();
-//			methodElapsedTime.pauseAndPrint();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersCountByCountryAndGender()", true);
+			writer.writeHeader("country", "gender", "count");
+			dbAdapter.usersCountByCountryAndGender();
+			methodElapsedTime.pauseAndPrint();
 			
 
 			adapterElapsedTime.pauseAndPrint();
