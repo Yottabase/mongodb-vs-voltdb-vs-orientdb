@@ -13,6 +13,7 @@ import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
 import org.yottabase.lastfm.adapter.voltdb.procedure.GetArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.adapter.voltdb.procedure.TracksChart;
+import org.yottabase.lastfm.adapter.voltdb.procedure.UsersByAgeRange;
 import org.yottabase.lastfm.adapter.voltdb.procedure.UsersChart;
 import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
@@ -33,6 +34,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		TracksChart.class.getCanonicalName(),
 		ArtistsChart.class.getCanonicalName(),
 		GetArtist.class.getCanonicalName(),
+		UsersByAgeRange.class.getCanonicalName()
 	};
 	
 	private Client client;
@@ -291,7 +293,15 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void usersByAgeRange(int lowerBound, int upperBound) {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "UsersByAgeRange", lowerBound, upperBound );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				System.out.println(response.getResults()[0].toFormattedString());
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
