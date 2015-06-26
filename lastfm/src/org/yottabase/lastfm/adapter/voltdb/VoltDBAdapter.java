@@ -16,6 +16,7 @@ import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursiv
 import org.yottabase.lastfm.adapter.voltdb.procedure.TracksChart;
 import org.yottabase.lastfm.adapter.voltdb.procedure.UsersByAgeRange;
 import org.yottabase.lastfm.adapter.voltdb.procedure.UsersChart;
+import org.yottabase.lastfm.adapter.voltdb.procedure.UsersStats;
 import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
@@ -37,6 +38,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		GetArtist.class.getCanonicalName(),
 		UsersByAgeRange.class.getCanonicalName(),
 		GetTracksByArtist.class.getCanonicalName(),
+		UsersStats.class.getCanonicalName(),
 	};
 	
 	private Client client;
@@ -323,13 +325,29 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void usersCountByCountry() {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "UsersStats", "Country");
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				System.out.println(response.getResults()[0].toFormattedString());
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void usersCountByCountryAndGender() {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "UsersStats", "Country+Gender");
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				System.out.println(response.getResults()[0].toFormattedString());
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
