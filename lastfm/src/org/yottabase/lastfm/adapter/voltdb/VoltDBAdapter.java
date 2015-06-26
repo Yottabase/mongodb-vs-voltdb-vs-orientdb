@@ -10,6 +10,7 @@ import org.yottabase.lastfm.adapter.voltdb.procedure.ArtistsChart;
 import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberListenedTracksPerUser;
 import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberSungTracksPerArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
+import org.yottabase.lastfm.adapter.voltdb.procedure.GetArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.adapter.voltdb.procedure.TracksChart;
 import org.yottabase.lastfm.adapter.voltdb.procedure.UsersChart;
@@ -30,7 +31,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		AverageNumberSungTracksPerArtist.class.getCanonicalName(),
 		UsersChart.class.getCanonicalName(),
 		TracksChart.class.getCanonicalName(),
-		ArtistsChart.class.getCanonicalName()
+		ArtistsChart.class.getCanonicalName(),
+		GetArtist.class.getCanonicalName(),
 	};
 	
 	private Client client;
@@ -262,14 +264,29 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void artistByCode(String artistCode) {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "GetArtist", "CODE", artistCode );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				System.out.println(response.getResults()[0].toFormattedString());
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void artistByName(String artistName) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "GetArtist", "NAME", artistName );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				System.out.println(response.getResults()[0].toFormattedString());
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
