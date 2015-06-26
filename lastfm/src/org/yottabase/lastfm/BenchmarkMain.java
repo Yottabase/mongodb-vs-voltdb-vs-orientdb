@@ -164,10 +164,49 @@ public class BenchmarkMain {
 			dbAdapter.artistsChart(n, false, false);
 			methodElapsedTime.pauseAndPrint();						
 
+
+
+			//artistByCode
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistByCode(6685bdd9-37f3-4323-8f7c-0e7bb9103e6d)", true);
+			dbAdapter.artistByCode("6685bdd9-37f3-4323-8f7c-0e7bb9103e6d");
+			methodElapsedTime.pauseAndPrint();
 			
+
+
+			//artistByName
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistByName(Rocket Empire)", true);
+			dbAdapter.artistByName("Rocket Empire");
+			methodElapsedTime.pauseAndPrint();
+
+
+
+			//usersByAgeRange
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersByAgeRange(10,40)", true);
+			dbAdapter.usersByAgeRange(10, 40);
+			methodElapsedTime.pauseAndPrint();
+
+
+
+			//tracksSungByArtist
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksSungByArtist(3d05eb8b-1644-4143-9a61-b28e33c4d85f)", true);
+			dbAdapter.tracksSungByArtist("3d05eb8b-1644-4143-9a61-b28e33c4d85f");
+			methodElapsedTime.pauseAndPrint();
+
+
+
+			//usersCountByCountry
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersCountByCountry()", true);
+			dbAdapter.usersCountByCountry();
+			methodElapsedTime.pauseAndPrint();
+
+
+
+			//usersCountByCountryAndGender
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersCountByCountryAndGender()", true);
+			dbAdapter.usersCountByCountryAndGender();
+			methodElapsedTime.pauseAndPrint();
 			
-			// TODO query mancanti più parametri nel properties
-			
+
 			adapterElapsedTime.pauseAndPrint();
 			writer.close();
 		}

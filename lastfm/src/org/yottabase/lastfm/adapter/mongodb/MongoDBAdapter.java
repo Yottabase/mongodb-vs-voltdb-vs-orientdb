@@ -27,7 +27,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 
-	private final static String DATABASE = "lastfm2Normalizzato";
+	private final static String DATABASE = "lastfm";
 	private final static String COLLECTIONUSERS = "users";
 	private final static String COLLECTIONARTISTS = "artists";
 	private final static String COLLECTIONLISTENED = "listened";
