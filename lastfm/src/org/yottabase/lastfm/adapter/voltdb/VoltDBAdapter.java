@@ -57,6 +57,9 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			.append("DROP TABLE Artist IF EXISTS; ")
 			.append("DROP TABLE Track IF EXISTS; ")
 			.append("DROP TABLE ListenedTrack IF EXISTS; ")
+			.append("DROP TABLE ListenedTrack_TrackCode IF EXISTS; ")
+			.append("DROP TABLE ListenedTrack_UserCode IF EXISTS; ")
+			.append("DROP TABLE Track_ArtistCode IF EXISTS; ")
 			.toString();
 		
 		for (int i = 0; i < proceduresNames.length; i++) {
@@ -82,12 +85,15 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			.append("Code VARCHAR NOT NULL, Name VARCHAR, ArtistCode VARCHAR,")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
+			.append("CREATE INDEX Track_ArtistCode ON Track ( ArtistCode );")
 			
 			//crea tabella ListenedTrack
 			.append("CREATE TABLE ListenedTrack ( ")
 			.append("Time TIMESTAMP, TrackCode VARCHAR, UserCode VARCHAR,")
 			.append("PRIMARY KEY (Time, TrackCode, UserCode)")
 			.append(");")
+			.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );")
+			.append("CREATE INDEX ListenedTrack_UserCode ON ListenedTrack ( UserCode );")
 			
 			.toString();
 		
