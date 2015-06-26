@@ -246,7 +246,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				VoltTable table = response.getResults()[0];
 		        while (table.advanceRow()) {
-		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
+		        	this.writer.write(table.getString(0), table.getString(1));
 		        }
 			}
 		} catch (IOException | ProcCallException e) {
@@ -259,7 +259,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "ArtistsChart", n,  (top ? "DESC" : "ASC") );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
 				
 			}
 		} catch (IOException | ProcCallException e) {
@@ -272,8 +275,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "GetArtist", "CODE", artistCode );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
-				
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
 			}
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
@@ -286,8 +291,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "GetArtist", "NAME", artistName );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
-				
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
 			}
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
@@ -299,7 +306,16 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "UsersByAgeRange", lowerBound, upperBound );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(
+	        			table.getString(0), 
+	        			table.getString(1), 
+	        			Long.toString(table.getLong(2)),
+	        			table.getString(3),
+	        			"data"
+		        	);
+		        }
 				
 			}
 		} catch (IOException | ProcCallException e) {
@@ -313,8 +329,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "GetTracksByArtist", artistCode );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
-				
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
 			}
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
@@ -327,8 +345,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "UsersStats", "Country");
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
-				
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), Long.toString(table.getLong(1)));
+		        }
 			}
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
@@ -341,8 +361,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "UsersStats", "Country+Gender");
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
-				
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
+		        }
 			}
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
