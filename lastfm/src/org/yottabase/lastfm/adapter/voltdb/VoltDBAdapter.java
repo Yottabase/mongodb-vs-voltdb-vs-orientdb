@@ -231,7 +231,13 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				VoltTable table = response.getResults()[0];
 		        while (table.advanceRow()) {
-		        	this.writer.write(table.getString(0), Long.toString(table.getLong(1)));
+		        	this.writer.write(
+	        			table.getString(0), 
+	        			table.getString(1), 
+	        			Long.toString(table.getLong(2)),
+	        			table.getString(3),
+	        			"data"
+		        	);
 		        }
 			}
 		} catch (IOException | ProcCallException e) {
