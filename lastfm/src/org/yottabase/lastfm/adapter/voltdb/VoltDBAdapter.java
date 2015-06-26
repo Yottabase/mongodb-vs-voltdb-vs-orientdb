@@ -11,6 +11,7 @@ import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberListenedTracks
 import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberSungTracksPerArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
 import org.yottabase.lastfm.adapter.voltdb.procedure.GetArtist;
+import org.yottabase.lastfm.adapter.voltdb.procedure.GetTracksByArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.adapter.voltdb.procedure.TracksChart;
 import org.yottabase.lastfm.adapter.voltdb.procedure.UsersByAgeRange;
@@ -34,7 +35,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		TracksChart.class.getCanonicalName(),
 		ArtistsChart.class.getCanonicalName(),
 		GetArtist.class.getCanonicalName(),
-		UsersByAgeRange.class.getCanonicalName()
+		UsersByAgeRange.class.getCanonicalName(),
+		GetTracksByArtist.class.getCanonicalName(),
 	};
 	
 	private Client client;
@@ -307,7 +309,15 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void tracksSungByArtist(String artistCode) {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "GetTracksByArtist", artistCode );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				System.out.println(response.getResults()[0].toFormattedString());
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
