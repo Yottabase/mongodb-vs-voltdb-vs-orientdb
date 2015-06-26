@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcCallException;
+import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberListenedTracksPerUser;
 import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
 import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.core.AbstractDBFacade;
@@ -31,6 +32,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			//pulisce il database
 			.append("DROP PROCEDURE " + InsertListenedTrackRecursive.class.getCanonicalName() + " IF EXISTS;")
 			.append("DROP PROCEDURE " + Count.class.getCanonicalName() + " IF EXISTS;")
+			.append("DROP PROCEDURE " + AverageNumberListenedTracksPerUser.class.getCanonicalName() + " IF EXISTS;")
 			.append("DROP TABLE User IF EXISTS; ")
 			.append("DROP TABLE Artist IF EXISTS; ")
 			.append("DROP TABLE Track IF EXISTS; ")
@@ -69,6 +71,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			//crea procedura
 			.append("CREATE PROCEDURE FROM CLASS " + InsertListenedTrackRecursive.class.getCanonicalName() + ";")
 			.append("CREATE PROCEDURE FROM CLASS " + Count.class.getCanonicalName() + ";")
+			.append("CREATE PROCEDURE FROM CLASS " + AverageNumberListenedTracksPerUser.class.getCanonicalName() + ";")
 			
 			.toString();
 		
@@ -179,8 +182,15 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "AverageNumberListenedTracksPerUser" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
