@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcCallException;
+import org.yottabase.lastfm.adapter.voltdb.procedure.ArtistsChart;
 import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberListenedTracksPerUser;
 import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberSungTracksPerArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
@@ -28,7 +29,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		AverageNumberListenedTracksPerUser.class.getCanonicalName(),
 		AverageNumberSungTracksPerArtist.class.getCanonicalName(),
 		UsersChart.class.getCanonicalName(),
-		TracksChart.class.getCanonicalName()
+		TracksChart.class.getCanonicalName(),
+		ArtistsChart.class.getCanonicalName()
 	};
 	
 	private Client client;
@@ -247,8 +249,15 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ClientResponse response = this.client.callProcedure( "ArtistsChart", n,  (top ? "DESC" : "ASC") );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				System.out.println(response.getResults()[0].toFormattedString());
+				
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
