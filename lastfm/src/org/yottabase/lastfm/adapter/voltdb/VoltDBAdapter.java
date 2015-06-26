@@ -111,12 +111,6 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	}
 	
 	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void insertUser(User user) {
 		try {
 			this.client.callProcedure(
@@ -346,6 +340,16 @@ public class VoltDBAdapter extends AbstractDBFacade{
 				
 			}
 		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public void close() {
+		try {
+			client.close();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
