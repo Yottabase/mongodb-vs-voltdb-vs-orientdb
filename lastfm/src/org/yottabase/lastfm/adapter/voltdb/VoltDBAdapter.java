@@ -3,6 +3,7 @@ package org.yottabase.lastfm.adapter.voltdb;
 import java.io.File;
 import java.io.IOException;
 
+import org.voltdb.VoltTable;
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcCallException;
@@ -228,8 +229,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "UsersChart", n,  (top ? "DESC" : "ASC") );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
-				
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), Long.toString(table.getLong(1)));
+		        }
 			}
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
@@ -241,8 +244,10 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		try {
 			ClientResponse response = this.client.callProcedure( "TracksChart", n,  (top ? "DESC" : "ASC") );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
-				System.out.println(response.getResults()[0].toFormattedString());
-				
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
+		        }
 			}
 		} catch (IOException | ProcCallException e) {
 			e.printStackTrace();
