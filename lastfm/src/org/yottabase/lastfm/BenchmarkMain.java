@@ -70,47 +70,47 @@ public class BenchmarkMain {
 			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countArtists()", true);
-			writer.write("artists_count");
+			writer.writeHeader("artists_count");
 			dbAdapter.countArtists();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countTracks()", true);
-			writer.write("tracks_count");
+			writer.writeHeader("tracks_count");
 			dbAdapter.countTracks();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countUsers()", true);
-			writer.write("users_count");
+			writer.writeHeader("users_count");
 			dbAdapter.countUsers();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countEntities()", true);
-			writer.write("entities_count");
+			writer.writeHeader("entities_count");
 			dbAdapter.countEntities();
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberListenedTracksPerUser(true)", true);
-			writer.write("average_listened_user");
+			writer.writeHeader("average_listened_user");
 			dbAdapter.averageNumberListenedTracksPerUser(true);
 			methodElapsedTime.pauseAndPrint();
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberListenedTracksPerUser(false)", true);
-			writer.write("average_listened_user");
+			writer.writeHeader("average_listened_user");
 			dbAdapter.averageNumberListenedTracksPerUser(false);
 			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberSungTracksPerArtist()", true);
-			writer.write("average_sung_artist");
+			writer.writeHeader("average_sung_artist");
 			dbAdapter.averageNumberSungTracksPerArtist();
 			methodElapsedTime.pauseAndPrint();
 			
@@ -118,22 +118,22 @@ public class BenchmarkMain {
 			
 			//usersChart
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, true, true)", true);
-			writer.write("user_code", "gender", "age", "country", "signup_date");
+			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
 			dbAdapter.usersChart(n, true, true);
 			methodElapsedTime.pauseAndPrint();
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, false, true)", true);
-			writer.write("user_code", "gender", "age", "country", "signup_date");
+			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
 			dbAdapter.usersChart(n, false, true);
 			methodElapsedTime.pauseAndPrint();			
 
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, true, false)", true);
-			writer.write("user_code", "gender", "age", "country", "signup_date");
+			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
 			dbAdapter.usersChart(n, true, false);
 			methodElapsedTime.pauseAndPrint();			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, false, false)", true);
-			writer.write("user_code", "gender", "age", "country", "signup_date");
+			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
 			dbAdapter.usersChart(n, false, false);
 			methodElapsedTime.pauseAndPrint();
 			
@@ -141,22 +141,22 @@ public class BenchmarkMain {
 			
 			//tracksChart
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, true, true)", true);
-			writer.write("track_code", "track_name");
+			writer.writeHeader("track_code", "track_name");
 			dbAdapter.tracksChart(n, true, true);
 			methodElapsedTime.pauseAndPrint();
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, false, true)", true);
-			writer.write("track_code", "track_name");
+			writer.writeHeader("track_code", "track_name");
 			dbAdapter.tracksChart(n, false, true);
 			methodElapsedTime.pauseAndPrint();			
 
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, true, false)", true);
-			writer.write("track_code", "track_name");
+			writer.writeHeader("track_code", "track_name");
 			dbAdapter.tracksChart(n, true, false);
 			methodElapsedTime.pauseAndPrint();			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, false, false)", true);
-			writer.write("track_code", "track_name");
+			writer.writeHeader("track_code", "track_name");
 			dbAdapter.tracksChart(n, false, false);
 			methodElapsedTime.pauseAndPrint();			
 
@@ -164,22 +164,22 @@ public class BenchmarkMain {
 			
 			//artistsChart
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, true, true)", true);
-			writer.write("artist_code", "artist_name");
+			writer.writeHeader("artist_code", "artist_name");
 			dbAdapter.artistsChart(n, true, true);
 			methodElapsedTime.pauseAndPrint();
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, false, true)", true);
-			writer.write("artist_code", "artist_name");
+			writer.writeHeader("artist_code", "artist_name");
 			dbAdapter.artistsChart(n, false, true);
 			methodElapsedTime.pauseAndPrint();			
 
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, true, false)", true);
-			writer.write("artist_code", "artist_name");
+			writer.writeHeader("artist_code", "artist_name");
 			dbAdapter.artistsChart(n, true, false);
 			methodElapsedTime.pauseAndPrint();			
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, false, false)", true);
-			writer.write("artist_code", "artist_name");
+			writer.writeHeader("artist_code", "artist_name");
 			dbAdapter.artistsChart(n, false, false);
 			methodElapsedTime.pauseAndPrint();						
 
@@ -187,7 +187,7 @@ public class BenchmarkMain {
 
 			//artistByCode
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistByCode(6685bdd9-37f3-4323-8f7c-0e7bb9103e6d)", true);
-			writer.write("artist_code", "artist_name");
+			writer.writeHeader("artist_code", "artist_name");
 			dbAdapter.artistByCode("6685bdd9-37f3-4323-8f7c-0e7bb9103e6d");
 			methodElapsedTime.pauseAndPrint();
 			
@@ -195,7 +195,7 @@ public class BenchmarkMain {
 
 			//artistByName
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistByName(Rocket Empire)", true);
-			writer.write("artist_code", "artist_name");
+			writer.writeHeader("artist_code", "artist_name");
 			dbAdapter.artistByName("Rocket Empire");
 			methodElapsedTime.pauseAndPrint();
 
@@ -203,7 +203,7 @@ public class BenchmarkMain {
 
 			//usersByAgeRange
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersByAgeRange(10,40)", true);
-			writer.write("user_code", "gender", "age", "country", "signup_date");
+			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
 			dbAdapter.usersByAgeRange(10, 40);
 			methodElapsedTime.pauseAndPrint();
 
@@ -211,7 +211,7 @@ public class BenchmarkMain {
 
 			//tracksSungByArtist
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksSungByArtist(3d05eb8b-1644-4143-9a61-b28e33c4d85f)", true);
-			writer.write("track_code", "track_name");
+			writer.writeHeader("track_code", "track_name");
 			dbAdapter.tracksSungByArtist("3d05eb8b-1644-4143-9a61-b28e33c4d85f");
 			methodElapsedTime.pauseAndPrint();
 
@@ -219,7 +219,7 @@ public class BenchmarkMain {
 
 			//usersCountByCountry
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersCountByCountry()", true);
-			writer.write("country", "count");
+			writer.writeHeader("country", "count");
 			dbAdapter.usersCountByCountry();
 			methodElapsedTime.pauseAndPrint();
 
@@ -227,7 +227,7 @@ public class BenchmarkMain {
 
 			//usersCountByCountryAndGender
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersCountByCountryAndGender()", true);
-			writer.write("country", "gender", "count");
+			writer.writeHeader("country", "gender", "count");
 			dbAdapter.usersCountByCountryAndGender();
 			methodElapsedTime.pauseAndPrint();
 			

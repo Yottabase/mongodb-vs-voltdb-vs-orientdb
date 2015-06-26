@@ -7,7 +7,7 @@ mkdir ./obj
 
 $JAVAC_PATH -classpath "./:./resources/voltdb/*" \
 	-d ./obj  \
-	./src/org/yottabase/lastfm/driver/voltdb/procedure/*.java
+	./src/org/yottabase/lastfm/adapter/voltdb/procedure/*.java
 
 $JAR_PATH cvf ./resources/voltdbProcedure.jar -C ./obj .
 
