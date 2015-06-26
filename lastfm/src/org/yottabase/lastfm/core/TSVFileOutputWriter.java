@@ -17,6 +17,15 @@ public class TSVFileOutputWriter implements OutputWriter {
 		}
 		
 	}
+	
+	@Override
+	public void writeHeader(String... fields) {
+		this.writer.println();
+		for(String field : fields) {
+			this.writer.print(field + "\t");
+		}
+		this.writer.println();
+	}
 
 	@Override
 	public void write(String... fields) {
