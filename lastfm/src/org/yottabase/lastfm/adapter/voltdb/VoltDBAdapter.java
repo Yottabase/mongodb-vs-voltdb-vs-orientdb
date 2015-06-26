@@ -7,6 +7,7 @@ import org.voltdb.client.Client;
 import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcCallException;
 import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberListenedTracksPerUser;
+import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberSungTracksPerArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
 import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.core.AbstractDBFacade;
@@ -22,7 +23,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	private final String[] proceduresNames = {
 		InsertListenedTrackRecursive.class.getCanonicalName(),
 		Count.class.getCanonicalName(),
-		AverageNumberListenedTracksPerUser.class.getCanonicalName()
+		AverageNumberListenedTracksPerUser.class.getCanonicalName(),
+		AverageNumberSungTracksPerArtist.class.getCanonicalName()
 	};
 	
 	private Client client;
@@ -201,7 +203,15 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void averageNumberSungTracksPerArtist() {
-		// TODO Auto-generated method stub
+		try {
+			ClientResponse response = this.client.callProcedure( "AverageNumberSungTracksPerArtist" );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				long count = response.getResults()[0].asScalarLong();
+				this.writer.write(Long.toString(count));
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
