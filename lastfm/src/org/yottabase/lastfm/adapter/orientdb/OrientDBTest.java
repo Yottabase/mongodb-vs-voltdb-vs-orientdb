@@ -7,30 +7,33 @@ import org.yottabase.lastfm.core.PropertyFile;
 
 public class OrientDBTest {
 	
-	private static final String CONFIG_FILE_PATH = "config.properties";
+	private static final String CONFIG_FILE_PATH = "/home/hduser/git/lastfm/lastfm/src/config.properties";
 	
 	public static void main(String[] args) throws IOException {
 		PropertyFile config = new PropertyFile(CONFIG_FILE_PATH);
 		DBFacadeFactory factory = new OrientDBAdapterFactory();
-		AbstractDBFacade orientdbFacade = factory.createService(config);
+		AbstractDBFacade orientdbAdapter = factory.createService(config);
 		
 		// counts
-		orientdbFacade.countEntities();
-		orientdbFacade.countArtists();
-		orientdbFacade.countTracks();
-		orientdbFacade.countUsers();
+//		orientdbAdapter.countEntities();
+//		orientdbAdapter.countArtists();
+//		orientdbAdapter.countTracks();
+//		orientdbAdapter.countUsers();
+//		
+//		// avarages
+//		orientdbAdapter.averageNumberListenedTracksPerUser(false);	// SQL
+//		orientdbAdapter.averageNumberSungTracksPerArtist();			// SQL
+//		
+//		// charts (top/last K)
+//		orientdbAdapter.usersChart(1, true, false);		// SQL - NO DISTINCT
+//		orientdbAdapter.tracksChart(1, true, false);		// SQL
+		orientdbAdapter.artistsChart(1, true, false);	// SQL
 		
-		// avarages
-		orientdbFacade.averageNumberListenedTracksPerUser(false);
-		orientdbFacade.averageNumberSungTracksPerArtist();
+//		orientdbAdapter.artistByName("Coldplay");
+//		orientdbAdapter.usersByAgeRange(10, 20);
+//		orientdbAdapter.usersCountByCountry();
 		
-		// charts (top/last K)
-		orientdbFacade.usersChart(1, true, false);		// NO DISTINCT
-		orientdbFacade.tracksChart(1, true, false);
-		orientdbFacade.artistsChart(1, true, false);
-		
-		// assocs
-//		orientdbFacade.tracksListenedTogether(1);		// TO DO
+		orientdbAdapter.close();
 		
 	}
 

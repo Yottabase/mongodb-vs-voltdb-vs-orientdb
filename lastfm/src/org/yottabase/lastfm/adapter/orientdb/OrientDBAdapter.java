@@ -1,5 +1,11 @@
 package org.yottabase.lastfm.adapter.orientdb;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
 import org.yottabase.lastfm.importer.User;
@@ -8,10 +14,20 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Element;
 import com.tinkerpop.blueprints.Parameter;
+import com.tinkerpop.blueprints.Predicate;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
+import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
+import com.tinkerpop.gremlin.Tokens.T;
+import com.tinkerpop.gremlin.java.GremlinPipeline;
+import com.tinkerpop.pipes.PipeFunction;
+import com.tinkerpop.pipes.util.PipeHelper;
+import com.tinkerpop.pipes.util.PipesFunction;
+import com.tinkerpop.pipes.util.structures.Pair;
+import com.tinkerpop.pipes.util.structures.Row;
 
 public class OrientDBAdapter extends AbstractDBFacade {
 	
@@ -47,7 +63,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 	
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
+		graph.shutdown();
 		
 	}
 
@@ -155,31 +171,34 @@ public class OrientDBAdapter extends AbstractDBFacade {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+	public void usersChart(int n, boolean top, boolean uniqueTrack) {		
 		String querySQL = 
-				  "SELECT *,out_Listen.size() AS listenings "
+				  "SELECT *,out().size() "
 				+ "FROM User "
-				+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
-				+ "LIMIT " + n;  // TODO no distinct
+				+ "ORDER BY out_Listen " + ((top) ? "ASC" : "DESC") + " "
+				+ "LIMIT " + n;
 		
-		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
-			writer.write(v.toString());		// TODO cosa bisogna stampare?
+//		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
+//			writer.write(v.toString());
 		
+		// TODO write
+
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
 		String querySQL = 		
-				"SELECT expand(track) FROM ("
-						+ "SELECT in AS track, count(" + ((uniqueTracks) ? "distinct(out)" : "out") + ") AS listenings "
-						+ "FROM Listen GROUP BY in "
+				"SELECT *,in_Listen.size() AS listenings "
+						+ "FROM Track "
 						+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
 						+ "LIMIT " + n +
 				")";
 		
-		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
-			writer.write(v.toString());		// TODO cosa bisogna stampare?
+//		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
+//			writer.write(v.toString());
+		
+		// TODO write
 		
 	}
 
@@ -187,52 +206,73 @@ public class OrientDBAdapter extends AbstractDBFacade {
 	@SuppressWarnings("unchecked")
 	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
 		String querySQL = 
-				"SELECT expand(track) FROM ("
-						+ "SELECT in AS track, count(" + ((uniqueTracks) ? "distinct(out)" : "out") + ") AS listenings "
-						+ "FROM Listen GROUP BY in "
+				"SELECT *, in_Listen.size() AS listenings "
+						+ "FROM Track "
 						+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
 						+ "LIMIT " + n +
 				")";
 		
-		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
-			for (Edge e : v.getEdges(Direction.IN, "Sing"))
-				writer.write(e.getVertex(Direction.OUT).toString());	// TODO cosa bisogna stampare?
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute()) {
+			Vertex artist = v.getEdges(Direction.IN, "Sing").iterator().next().getVertex(Direction.OUT);
+			writer.write(artist.toString());
+		}
+		
+		// TODO write
 		
 	}
 
 	@Override
 	public void artistByCode(String artistCode) {
-		// TODO Auto-generated method stub
+		Vertex artist = graph.getVertexByKey("Artist.artistID", artistCode);
+		
+		// TODO write
 		
 	}
 
 	@Override
 	public void artistByName(String artistName) {
-		// TODO Auto-generated method stub
+		Element artist = 
+				new GremlinPipeline<Vertex, Vertex>(graph.getVerticesOfClass("Artist"))
+				.has("name", artistName)
+				.next();
+		
+		// TODO write
 		
 	}
 
 	@Override
 	public void usersByAgeRange(int lowerBound, int upperBound) {
-		// TODO Auto-generated method stub
+		GremlinPipeline<Vertex,? extends Element> users = 
+				new GremlinPipeline<Vertex, Vertex>(graph.getVerticesOfClass("User"))
+				.interval("age", lowerBound, upperBound);
+
+		// TODO write
 		
 	}
 
 	@Override
 	public void tracksSungByArtist(String artistCode) {
-		// TODO Auto-generated method stub
+		Vertex artist = graph.getVertexByKey("Artist.artistID", artistCode);
+		Iterable<Vertex> artistTracks = artist.getVertices(Direction.OUT, "Sing");
+		
+		// TODO write
 		
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void usersCountByCountry() {
-		// TODO Auto-generated method stub
+		Map<String,Integer> counts = (HashMap<String,Integer>)
+				new GremlinPipeline<Vertex, Vertex>(graph.getVerticesOfClass("User"))
+				.property("country").groupCount().cap().next();
 		
+		// TODO write
+			
 	}
 
 	@Override
 	public void usersCountByCountryAndGender() {
-		// TODO Auto-generated method stub
+		// TODO
 		
 	}
 
