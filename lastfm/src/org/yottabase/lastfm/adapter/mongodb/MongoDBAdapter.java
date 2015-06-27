@@ -201,7 +201,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 	}
 
 	@Override
-	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+	public void averageNumberListenedTracksPerUser() {
 
 		/*console query
 		 * db.listened.aggregate( [ { $project: { "_id":0, "code": 1, "timeListened": { $size: { "$ifNull": [ "$timeListened", [] ] } } } },{ $group: { _id: "$code", total: { $sum: "$timeListened" } } },{ $group: { _id: null,lngAvg: {$avg: "$total"} }} ] )
@@ -245,7 +245,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 	}
 
 	@Override
-	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+	public void usersChart(int n, boolean top) {
 		int order = 1;
 		if(top)
 			order = -1;
@@ -280,7 +280,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 	}
 
 	@Override
-	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+	public void tracksChart(int n, boolean top) {
 		int order = 1;
 		if(top)
 			order = -1;
@@ -324,7 +324,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 	}
 
 	@Override
-	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+	public void artistsChart(int n, boolean top) {
 		int order = 1;
 		if(top)
 			order = -1;

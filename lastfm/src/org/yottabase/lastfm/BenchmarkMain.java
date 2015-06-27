@@ -97,15 +97,10 @@ public class BenchmarkMain {
 			
 			
 			
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberListenedTracksPerUser(true)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberListenedTracksPerUser()", true);
 			writer.writeHeader("average_listened_user");
-			dbAdapter.averageNumberListenedTracksPerUser(true);
+			dbAdapter.averageNumberListenedTracksPerUser();
 			methodElapsedTime.pauseAndPrint();
-			
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "averageNumberListenedTracksPerUser(false)", true);
-//			writer.writeHeader("average_listened_user");
-//			dbAdapter.averageNumberListenedTracksPerUser(false);
-//			methodElapsedTime.pauseAndPrint();
 			
 			
 			
@@ -117,71 +112,41 @@ public class BenchmarkMain {
 			
 			
 			//usersChart
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, true, true)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, true)", true);
 			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
-			dbAdapter.usersChart(n, true, true);
+			dbAdapter.usersChart(n, true);
 			methodElapsedTime.pauseAndPrint();
 			
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, false, true)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, false)", true);
 			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
-			dbAdapter.usersChart(n, false, true);
+			dbAdapter.usersChart(n, false);
 			methodElapsedTime.pauseAndPrint();			
-
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, true, false)", true);
-//			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
-//			dbAdapter.usersChart(n, true, false);
-//			methodElapsedTime.pauseAndPrint();			
-//			
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "usersChart(n, false, false)", true);
-//			writer.writeHeader("user_code", "gender", "age", "country", "signup_date");
-//			dbAdapter.usersChart(n, false, false);
-//			methodElapsedTime.pauseAndPrint();
 			
 			
 			
 			//tracksChart
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, true, true)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, true)", true);
 			writer.writeHeader("track_code", "track_name");
-			dbAdapter.tracksChart(n, true, true);
+			dbAdapter.tracksChart(n, true);
 			methodElapsedTime.pauseAndPrint();
 			
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, false, true)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, false)", true);
 			writer.writeHeader("track_code", "track_name");
-			dbAdapter.tracksChart(n, false, true);
-			methodElapsedTime.pauseAndPrint();			
-
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, true, false)", true);
-//			writer.writeHeader("track_code", "track_name");
-//			dbAdapter.tracksChart(n, true, false);
-//			methodElapsedTime.pauseAndPrint();			
-//			
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksChart(n, false, false)", true);
-//			writer.writeHeader("track_code", "track_name");
-//			dbAdapter.tracksChart(n, false, false);
-//			methodElapsedTime.pauseAndPrint();			
+			dbAdapter.tracksChart(n, false);
+			methodElapsedTime.pauseAndPrint();						
 
 			
 			
 			//artistsChart
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, true, true)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, true)", true);
 			writer.writeHeader("artist_code", "artist_name");
-			dbAdapter.artistsChart(n, true, true);
+			dbAdapter.artistsChart(n, true);
 			methodElapsedTime.pauseAndPrint();
 			
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, false, true)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, false)", true);
 			writer.writeHeader("artist_code", "artist_name");
-			dbAdapter.artistsChart(n, false, true);
-			methodElapsedTime.pauseAndPrint();			
-
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, true, false)", true);
-//			writer.writeHeader("artist_code", "artist_name");
-//			dbAdapter.artistsChart(n, true, false);
-//			methodElapsedTime.pauseAndPrint();			
-//			
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "artistsChart(n, false, false)", true);
-//			writer.writeHeader("artist_code", "artist_name");
-//			dbAdapter.artistsChart(n, false, false);
-//			methodElapsedTime.pauseAndPrint();						
+			dbAdapter.artistsChart(n, false);
+			methodElapsedTime.pauseAndPrint();									
 
 
 

@@ -69,7 +69,7 @@ public class NoopAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+	public void averageNumberListenedTracksPerUser() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -81,19 +81,19 @@ public class NoopAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+	public void usersChart(int n, boolean top) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+	public void tracksChart(int n, boolean top) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+	public void artistsChart(int n, boolean top) {
 		// TODO Auto-generated method stub
 		
 	}

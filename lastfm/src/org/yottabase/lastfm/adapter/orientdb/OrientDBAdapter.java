@@ -131,7 +131,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+	public void averageNumberListenedTracksPerUser() {
 		String querySQL = 
 				"SELECT avg(listenings) FROM ("
 					+ "SELECT out_Listen.size() as listenings "
@@ -155,7 +155,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void usersChart(int n, boolean top, boolean uniqueTrack) {		
+	public void usersChart(int n, boolean top) {		
 		String querySQL = 
 				  "SELECT userID, gender, age, country, signup_date, out_Listen.size() AS listenings "
 				+ "FROM User "
@@ -175,7 +175,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+	public void tracksChart(int n, boolean top) {
 		String querySQL = 		
 				  "SELECT trackID, name, in_Listen.size() AS listenings "
 				+ "FROM Track "
@@ -192,7 +192,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+	public void artistsChart(int n, boolean top) {
 		String querySQL = 
 				  "SELECT in_Sing, in_Listen.size() AS listenings "
 				+ "FROM Track "

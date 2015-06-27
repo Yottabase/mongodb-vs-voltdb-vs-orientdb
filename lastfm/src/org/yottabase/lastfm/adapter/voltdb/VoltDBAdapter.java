@@ -204,7 +204,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
+	public void averageNumberListenedTracksPerUser() {
 		try {
 			ClientResponse response = this.client.callProcedure( "AverageNumberListenedTracksPerUser" );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
@@ -231,7 +231,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void usersChart(int n, boolean top, boolean uniqueTrack) {
+	public void usersChart(int n, boolean top) {
 		try {
 			ClientResponse response = this.client.callProcedure( "UsersChart", n,  (top ? "DESC" : "ASC") );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
@@ -252,7 +252,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
+	public void tracksChart(int n, boolean top) {
 		try {
 			ClientResponse response = this.client.callProcedure( "TracksChart", n,  (top ? "DESC" : "ASC") );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
@@ -267,7 +267,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
+	public void artistsChart(int n, boolean top) {
 		try {
 			ClientResponse response = this.client.callProcedure( "ArtistsChart", n,  (top ? "DESC" : "ASC") );
 			if (response.getStatus() == ClientResponse.SUCCESS) {

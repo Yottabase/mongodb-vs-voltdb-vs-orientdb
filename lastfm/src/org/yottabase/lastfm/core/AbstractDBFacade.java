@@ -59,9 +59,8 @@ public abstract class AbstractDBFacade {
 	
 	/**
 	 * Numero di canzoni mediamente ascoltate da un utente
-	 * @param uniqueTrack specifica se si considerano solo ascolti di brani diversi
 	 */
-	public abstract void averageNumberListenedTracksPerUser(boolean uniqueTrack);
+	public abstract void averageNumberListenedTracksPerUser();
 	
 	/**
 	 * Numero di tracce mediamente cantate da un artista
@@ -72,25 +71,22 @@ public abstract class AbstractDBFacade {
 	 * Gli utenti che hanno ascoltato più/meno canzoni
 	 * @param n specifica quanti utenti selezionare (per numero decrescente di ascolti)
 	 * @param top specifica il tipo di ordinamento (top->ASC, !top->DESC)
-	 * @param uniqueTrack specifica se si considerano solo ascolti di brani diversi
 	 */
-	public abstract void usersChart(int n, boolean top, boolean uniqueTrack);
+	public abstract void usersChart(int n, boolean top);
 	
 	/**
 	 * Le tracce più/meno ascoltate
 	 * @param n specifica il numero di tracce da selezionare (per numero crescente di ascolti)
 	 * @param top specifica il tipo di ordinamento (top->ASC, !top->DESC)
-	 * @param uniqueTracks specifica se si considerano solo ascolti di brani diversi
 	 */
-	public abstract void tracksChart(int n, boolean top, boolean uniqueTracks);
+	public abstract void tracksChart(int n, boolean top);
 	
 	/**
 	 * Gli artisti più/meno ascoltati
 	 * @param n specifica il numero di artisti da selezionare (per numero crescente di ascolti)
 	 * @param top specifica il tipo di ordinamento (top->ASC, !top->DESC)
-	 * @param uniqueTracks specifica se si considerano solo ascolti di brani diversi
 	 */
-	public abstract void artistsChart(int n, boolean top, boolean uniqueTracks);
+	public abstract void artistsChart(int n, boolean top);
 	
 //	/**
 //	 * Le top n tracce più ascoltate insieme
