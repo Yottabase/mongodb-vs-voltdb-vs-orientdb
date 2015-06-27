@@ -198,7 +198,9 @@ public class BenchmarkMain {
 			
 
 			adapterElapsedTime.pauseAndPrint();
+			
 			writer.close();
+			dbAdapter.close();
 		}
 		
 		globalElapsedTime.pauseAndPrint();
