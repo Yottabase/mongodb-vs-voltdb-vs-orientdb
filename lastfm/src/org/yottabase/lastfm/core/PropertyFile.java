@@ -33,8 +33,8 @@ public class PropertyFile {
 		}
 	}
 
-	public String get(String eregName) {
-		return this.propertiesFile.getProperty(eregName);
+	public String get(String prop) {
+		return this.propertiesFile.getProperty(prop);
 
 	}
 
