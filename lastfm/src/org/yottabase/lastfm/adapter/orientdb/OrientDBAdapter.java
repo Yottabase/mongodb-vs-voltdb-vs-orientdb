@@ -1,10 +1,8 @@
 package org.yottabase.lastfm.adapter.orientdb;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.yottabase.lastfm.core.AbstractDBFacade;
 import org.yottabase.lastfm.importer.ListenedTrack;
@@ -13,21 +11,12 @@ import org.yottabase.lastfm.importer.User;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Element;
 import com.tinkerpop.blueprints.Parameter;
-import com.tinkerpop.blueprints.Predicate;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
-import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
-import com.tinkerpop.gremlin.Tokens.T;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
-import com.tinkerpop.pipes.PipeFunction;
-import com.tinkerpop.pipes.util.PipeHelper;
-import com.tinkerpop.pipes.util.PipesFunction;
-import com.tinkerpop.pipes.util.structures.Pair;
-import com.tinkerpop.pipes.util.structures.Row;
 
 public class OrientDBAdapter extends AbstractDBFacade {
 	
@@ -87,7 +76,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 		Vertex user = graph.getVertexByKey("User.userID", listenedTrack.getCode());
 		Vertex artist = graph.getVertexByKey("Artist.artistID", listenedTrack.getArtistCode());
 		Vertex track = graph.getVertexByKey("Track.trackID", listenedTrack.getTrackCode());
-		boolean newSingRel = false;	// new pair <artist, track>
+		boolean newSingRel = false;	// new pair <artist,track>
 		
 		if (artist == null) {
 			newSingRel = true;
@@ -119,43 +108,38 @@ public class OrientDBAdapter extends AbstractDBFacade {
 	@Override
 	public void countArtists() {
 		long numArtists = graph.countVertices("Artist");
-		writer.write( String.valueOf(numArtists) );		// TODO cosa bisogna stampare?
-		
+		writer.write( String.valueOf(numArtists) );
 	}
 
 	@Override
 	public void countTracks() {
 		long numTracks = graph.countVertices("Track");
-		writer.write( String.valueOf(numTracks) );		// TODO cosa bisogna stampare?
-		
+		writer.write( String.valueOf(numTracks) );
 	}
 
 	@Override
 	public void countUsers() {
 		long numUsers = graph.countVertices("User");
-		writer.write( String.valueOf(numUsers) );		// TODO cosa bisogna stampare?
-		
+		writer.write( String.valueOf(numUsers) );
 	}
 
 	@Override
 	public void countEntities() {
 		long numVertices = graph.countVertices();
-		writer.write( String.valueOf(numVertices) );	// TODO cosa bisogna stampare?
-		
+		writer.write( String.valueOf(numVertices) );
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void averageNumberListenedTracksPerUser(boolean uniqueTrack) {
 		String querySQL = 
-				"SELECT avg(numUniqueListenings) FROM ("
-						+ "SELECT out AS user,count(" + ((uniqueTrack) ? "distinct(in)" : "in") + ") AS numUniqueListenings "
-						+ "FROM Listen "
-						+ "GROUP BY out" +
+				"SELECT avg(listenings) FROM ("
+					+ "SELECT out_Listen.size() as listenings "
+					+ "FROM User" + 
 				")";
-		
+		 
 		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
-			writer.write( String.valueOf(v.getProperty("avg")) ); 	// TODO cosa bisogna stampare?
+			writer.write( String.valueOf(v.getProperty("avg")) ); 	
 	}
 
 	@Override
@@ -166,67 +150,72 @@ public class OrientDBAdapter extends AbstractDBFacade {
 			+ "FROM Artist";
 		
 		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
-			writer.write( String.valueOf(v.getProperty("avg")) );		// TODO cosa bisogna stampare?
+			writer.write( String.valueOf(v.getProperty("avg")) );		
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void usersChart(int n, boolean top, boolean uniqueTrack) {		
 		String querySQL = 
-				  "SELECT *,out().size() "
+				  "SELECT userID, gender, age, country, signup_date, out_Listen.size() AS listenings "
 				+ "FROM User "
-				+ "ORDER BY out_Listen " + ((top) ? "ASC" : "DESC") + " "
+				+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
 				+ "LIMIT " + n;
 		
-//		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
-//			writer.write(v.toString());
-		
-		// TODO write
-
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute()) {
+			writer.write(
+					v.getProperty("userID"), 
+					v.getProperty("gender"), 
+					String.valueOf(v.getProperty("age")), 
+					v.getProperty("country"), 
+					String.valueOf(v.getProperty("signup_date")), 
+					String.valueOf(v.getProperty("listenings")) );
+		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void tracksChart(int n, boolean top, boolean uniqueTracks) {
 		String querySQL = 		
-				"SELECT *,in_Listen.size() AS listenings "
-						+ "FROM Track "
-						+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
-						+ "LIMIT " + n +
-				")";
+				  "SELECT trackID, name, in_Listen.size() AS listenings "
+				+ "FROM Track "
+				+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
+				+ "LIMIT " + n;
 		
-//		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute())
-//			writer.write(v.toString());
-		
-		// TODO write
-		
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute()) {
+			writer.write(
+					v.getProperty("trackID"), 
+					v.getProperty("name"), 
+					String.valueOf(v.getProperty("listenings")) );
+		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void artistsChart(int n, boolean top, boolean uniqueTracks) {
 		String querySQL = 
-				"SELECT *, in_Listen.size() AS listenings "
-						+ "FROM Track "
-						+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
-						+ "LIMIT " + n +
-				")";
+				  "SELECT in_Sing, in_Listen.size() AS listenings "
+				+ "FROM Track "
+				+ "ORDER BY listenings " + ((top) ? "ASC" : "DESC") + " "
+				+ "LIMIT " + n;
 		
 		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute()) {
 			Vertex artist = v.getEdges(Direction.IN, "Sing").iterator().next().getVertex(Direction.OUT);
-			writer.write(artist.toString());
+			
+			writer.write( 
+					artist.getProperty("artistID"), 
+					artist.getProperty("name"), 
+					String.valueOf(v.getProperty("listenings")) );
 		}
-		
-		// TODO write
-		
 	}
 
 	@Override
 	public void artistByCode(String artistCode) {
 		Vertex artist = graph.getVertexByKey("Artist.artistID", artistCode);
 		
-		// TODO write
-		
+		writer.write(
+				artist.getProperty("artistID"),
+				artist.getProperty("name"));
 	}
 
 	@Override
@@ -236,8 +225,9 @@ public class OrientDBAdapter extends AbstractDBFacade {
 				.has("name", artistName)
 				.next();
 		
-		// TODO write
-		
+		writer.write(
+				artist.getProperty("artistID"),
+				artist.getProperty("name"));
 	}
 
 	@Override
@@ -246,8 +236,14 @@ public class OrientDBAdapter extends AbstractDBFacade {
 				new GremlinPipeline<Vertex, Vertex>(graph.getVerticesOfClass("User"))
 				.interval("age", lowerBound, upperBound);
 
-		// TODO write
-		
+		for (Element user : users) {
+			writer.write(
+					user.getProperty("userID"), 
+					user.getProperty("gender"), 
+					String.valueOf(user.getProperty("age")), 
+					user.getProperty("country"), 
+					String.valueOf(user.getProperty("signup_date")) );
+		}
 	}
 
 	@Override
@@ -255,8 +251,11 @@ public class OrientDBAdapter extends AbstractDBFacade {
 		Vertex artist = graph.getVertexByKey("Artist.artistID", artistCode);
 		Iterable<Vertex> artistTracks = artist.getVertices(Direction.OUT, "Sing");
 		
-		// TODO write
-		
+		for (Vertex track : artistTracks) {
+			writer.write(
+					track.getProperty("trackID"), 
+					track.getProperty("name") );
+		}
 	}
 
 	@Override
@@ -266,14 +265,26 @@ public class OrientDBAdapter extends AbstractDBFacade {
 				new GremlinPipeline<Vertex, Vertex>(graph.getVerticesOfClass("User"))
 				.property("country").groupCount().cap().next();
 		
-		// TODO write
-			
+		for (Entry<String, Integer> e : counts.entrySet()) {
+			writer.write( e.getKey(), String.valueOf(e.getValue()) );
+		}
 	}
-
+	
 	@Override
+	@SuppressWarnings("unchecked")
 	public void usersCountByCountryAndGender() {
-		// TODO
+		String querySQL = 
+				  "SELECT country, gender, count(*) "
+				+ "FROM User "
+				+ "WHERE country IS NOT NULL AND gender IS NOT NULL "
+				+ "GROUP BY country, gender";
 		
+		for (Vertex v : (Iterable<Vertex>) graph.command(new OCommandSQL(querySQL)).execute()) {
+			writer.write( 
+					v.getProperty("country") + "\t" +
+					v.getProperty("gender") + "\t" +
+					String.valueOf(v.getProperty("count")) );
+		}
 	}
 
 }

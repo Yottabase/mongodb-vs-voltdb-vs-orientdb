@@ -21,17 +21,17 @@ public class OrientDBTest {
 //		orientdbAdapter.countUsers();
 //		
 //		// avarages
-//		orientdbAdapter.averageNumberListenedTracksPerUser(false);	// SQL
-//		orientdbAdapter.averageNumberSungTracksPerArtist();			// SQL
+//		orientdbAdapter.averageNumberListenedTracksPerUser(false);
+//		orientdbAdapter.averageNumberSungTracksPerArtist();
 //		
 //		// charts (top/last K)
-//		orientdbAdapter.usersChart(1, true, false);		// SQL - NO DISTINCT
-//		orientdbAdapter.tracksChart(1, true, false);		// SQL
-		orientdbAdapter.artistsChart(1, true, false);	// SQL
+//		orientdbAdapter.usersChart(1, true, false);
+//		orientdbAdapter.tracksChart(1, true, false);
+//		orientdbAdapter.artistsChart(1, true, false);
 		
 //		orientdbAdapter.artistByName("Coldplay");
 //		orientdbAdapter.usersByAgeRange(10, 20);
-//		orientdbAdapter.usersCountByCountry();
+		orientdbAdapter.usersCountByCountry();
 		
 		orientdbAdapter.close();
 		
