@@ -26,7 +26,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	private static final String PROCEDURE_ADHOC = "@AdHoc";
 	
-	private final File procedureJar = new File("resources/voltdbProcedure.jar");
+	private File procedureJar = new File("resources/voltdbProcedure.jar");
 	
 	private final String[] proceduresNames = {
 		InsertListenedTrackRecursive.class.getCanonicalName(),
@@ -46,6 +46,11 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	
 	public VoltDBAdapter(Client client) {
 		this.client = client;
+	}
+	
+	public VoltDBAdapter(Client client, String procedureFilepath) {
+		this.client = client;
+		this.procedureJar = new File(procedureFilepath);
 	}
 
 	@Override

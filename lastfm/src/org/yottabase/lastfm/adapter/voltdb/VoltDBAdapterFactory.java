@@ -19,13 +19,18 @@ public class VoltDBAdapterFactory implements DBFacadeFactory{
 		String host = properties.get("voltdb.host");
 		String username = properties.get("voltdb.username");
 		String password = properties.get("voltdb.password");
-			
+		String procedureFilename = properties.get("voltdb.procedure_filename");
+		
 		try {
 			
 			Client client = ClientFactory.createClient(new ClientConfig(username, password));
 			client.createConnection(host);
 			
-			facade = new VoltDBAdapter(client);
+			if(procedureFilename == null){
+				facade = new VoltDBAdapter(client);	
+			}else{
+				facade = new VoltDBAdapter(client, procedureFilename);
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
