@@ -48,8 +48,8 @@ public class BenchmarkMain {
 			String adapterName = dbAdapter.getClass().getSimpleName();
 			
 			adapterElapsedTime = new Timer(adapterName, true);
-			insertElapsedTime = new Timer("Total insert");
-			queryElapsedTime = new Timer("Total query");
+			insertElapsedTime = new Timer(adapterName + " insert");
+			queryElapsedTime = new Timer(adapterName + " query");
 
 			OutputWriter writer = outputWriterFactory.createService(config, dbAdapter.getClass().getSimpleName() + "_output.txt");
 			dbAdapter.setWriter(writer);
