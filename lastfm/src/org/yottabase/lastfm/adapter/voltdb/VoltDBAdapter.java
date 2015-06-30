@@ -391,6 +391,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	
 	@Override
 	public void close() {
+		writer.close();
+		
 		try {
 			client.close();
 		} catch (InterruptedException e) {

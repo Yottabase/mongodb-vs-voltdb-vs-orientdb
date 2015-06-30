@@ -14,7 +14,7 @@ public class NoopAdapter extends AbstractDBFacade{
 	
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
+		writer.close();
 		
 	}
 	

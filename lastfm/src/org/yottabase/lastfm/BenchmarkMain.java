@@ -206,7 +206,6 @@ public class BenchmarkMain {
 			queryElapsedTime.pauseAndPrint();
 			adapterElapsedTime.pauseAndPrint();
 			
-			writer.close();
 			dbAdapter.close();
 		}
 		

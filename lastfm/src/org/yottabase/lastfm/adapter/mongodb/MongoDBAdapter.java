@@ -70,7 +70,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
+		writer.close();
 
 	}
 

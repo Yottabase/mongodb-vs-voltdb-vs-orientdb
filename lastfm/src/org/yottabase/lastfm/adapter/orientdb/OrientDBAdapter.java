@@ -53,6 +53,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 	
 	@Override
 	public void close() {
+		writer.close();
 		graph.shutdown();
 		
 	}
