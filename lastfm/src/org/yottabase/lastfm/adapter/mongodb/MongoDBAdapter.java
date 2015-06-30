@@ -368,8 +368,9 @@ public class MongoDBAdapter extends AbstractDBFacade {
 	public void artistByCode(String artistCode) {
 		Document query = new Document("artistId", artistCode);
 		FindIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).find(query);
-
-		this.writer.write(iterable.first().get("artistId").toString() + iterable.first().get("artistName").toString());
+		
+		if(iterable.first() != null)
+			this.writer.write(iterable.first().get("artistId").toString() + iterable.first().get("artistName").toString());
 
 	}
 
@@ -378,7 +379,8 @@ public class MongoDBAdapter extends AbstractDBFacade {
 
 		FindIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).find(new Document("artistName", artistName));
 
-		this.writer.write(iterable.first().get("artistId").toString() + iterable.first().get("artistName").toString());
+		if(iterable.first() != null)
+			this.writer.write(iterable.first().get("artistId").toString() + iterable.first().get("artistName").toString());
 
 	}
 
