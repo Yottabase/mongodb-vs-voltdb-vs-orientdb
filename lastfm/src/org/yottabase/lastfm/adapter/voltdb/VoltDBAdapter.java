@@ -171,7 +171,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	@Override
 	public void countTracks() {
 		try {
-			ClientResponse response = this.client.callProcedure( "Count",	"Artists" );
+			ClientResponse response = this.client.callProcedure( "Count",	"Tracks" );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				long count = response.getResults()[0].asScalarLong();
 				this.writer.write(Long.toString(count));
