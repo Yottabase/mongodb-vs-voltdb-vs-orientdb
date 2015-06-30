@@ -19,9 +19,10 @@ public class OrientDBAdapterFactory implements DBFacadeFactory {
 		String db_directory = properties.get(	PREFIX + "db_directory"	);
 		String username 	= properties.get(	PREFIX + "username"		);
 		String password 	= properties.get(	PREFIX + "password"		);
+		String url = storage + ":" + (storage.equals("remote") ? host : "") + db_directory;
 		
 		// db as a graph
-		OrientGraphFactory factory = new OrientGraphFactory(storage + ":" + db_directory, username, password);
+		OrientGraphFactory factory = new OrientGraphFactory(url, username, password);
 		OrientGraph graph = factory.getTx();				// transactional instance
 		
 		// config & tuning
