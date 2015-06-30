@@ -29,6 +29,7 @@ public class OrientDBAdapter extends AbstractDBFacade {
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void initializeSchema() {	
+		
 		OrientVertexType userVertexClass = graph.createVertexType("User");
 		userVertexClass.createProperty("userID", OType.STRING);
 		userVertexClass.createProperty("gender", OType.STRING);
