@@ -20,7 +20,7 @@ voltdb.host=localhost
 voltdb.username=username
 voltdb.password=password
 voltdb.async_mode=false
-voltdb.procedure=/home/voltdbProcedure.jar
+voltdb.procedure_filename=/home/.../voltdbProcedure.jar
 
 #Mongodb
 mongodb.enabled=false
