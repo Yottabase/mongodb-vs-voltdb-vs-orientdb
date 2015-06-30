@@ -46,6 +46,10 @@ public class Timer {
 		System.out.println(this);
 	}
 	
+	public void print() {
+		System.out.println(this);
+	} 
+	
 	public String toString(){
 		return String.format("%s: %dms [%dh %dm %ds]",
 			this.timerName,
@@ -55,5 +59,6 @@ public class Timer {
 			Math.round(this.elapsedTime/1000) - (Math.round(this.elapsedTime/1000/60) * 60) - (Math.round(this.elapsedTime/1000/60/60) * 60)
 		);
 	}
+
 
 }

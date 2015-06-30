@@ -38,6 +38,9 @@ public class BenchmarkMain {
 		OutputWriterFactory outputWriterFactory = new OutputWriterFactory();
 		
 		Timer globalElapsedTime = new Timer("Total", true);
+		Timer insertElapsedTime;
+		Timer queryElapsedTime;
+
 		Timer adapterElapsedTime;
 		Timer methodElapsedTime;
 		
@@ -45,11 +48,13 @@ public class BenchmarkMain {
 			String adapterName = dbAdapter.getClass().getSimpleName();
 			
 			adapterElapsedTime = new Timer(adapterName, true);
-			
+			insertElapsedTime = new Timer("Total insert");
+			queryElapsedTime = new Timer("Total query");
+
 			OutputWriter writer = outputWriterFactory.createService(config, dbAdapter.getClass().getSimpleName() + "_output.txt");
 			dbAdapter.setWriter(writer);
 			
-			
+			insertElapsedTime.startOrRestart();
 			//BENCHMARK
 //			methodElapsedTime = new Timer(adapterName + SEPARATOR + "initializeSchema()", true);
 //			dbAdapter.initializeSchema();
@@ -67,7 +72,8 @@ public class BenchmarkMain {
 //			importListenedTrackDataset(config.get("dataset.listened_tracks.filepath"), dbAdapter);
 //			methodElapsedTime.pauseAndPrint();
 			
-			
+			insertElapsedTime.pause();
+			queryElapsedTime.startOrRestart();
 			
 			methodElapsedTime = new Timer(adapterName + SEPARATOR + "countArtists()", true);
 			writer.writeHeader("artists_count");
@@ -196,7 +202,8 @@ public class BenchmarkMain {
 			dbAdapter.usersCountByCountryAndGender();
 			methodElapsedTime.pauseAndPrint();
 			
-
+			insertElapsedTime.print();
+			queryElapsedTime.pauseAndPrint();
 			adapterElapsedTime.pauseAndPrint();
 			
 			writer.close();
