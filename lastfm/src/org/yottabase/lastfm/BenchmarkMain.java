@@ -56,21 +56,21 @@ public class BenchmarkMain {
 			
 			insertElapsedTime.startOrRestart();
 			//BENCHMARK
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "initializeSchema()", true);
-//			dbAdapter.initializeSchema();
-//			methodElapsedTime.pauseAndPrint();
-//			
-//			
-//			
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "insertUser()", true);
-//			importUserDataset(config.get("dataset.user.filepath"), dbAdapter);
-//			methodElapsedTime.pauseAndPrint();
-//			
-//			
-//			
-//			methodElapsedTime = new Timer(adapterName + SEPARATOR + "insertListenedTrack()", true);
-//			importListenedTrackDataset(config.get("dataset.listened_tracks.filepath"), dbAdapter);
-//			methodElapsedTime.pauseAndPrint();
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "initializeSchema()", true);
+			dbAdapter.initializeSchema();
+			methodElapsedTime.pauseAndPrint();
+			
+			
+			
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "insertUser()", true);
+			importUserDataset(config.get("dataset.user.filepath"), dbAdapter);
+			methodElapsedTime.pauseAndPrint();
+			
+			
+			
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "insertListenedTrack()", true);
+			importListenedTrackDataset(config.get("dataset.listened_tracks.filepath"), dbAdapter);
+			methodElapsedTime.pauseAndPrint();
 			
 			insertElapsedTime.pause();
 			queryElapsedTime.startOrRestart();
