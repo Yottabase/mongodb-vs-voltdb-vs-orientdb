@@ -169,18 +169,18 @@ public class MongoDBAdapter extends AbstractDBFacade {
 
 	@Override
 	public void countTracks() {
-		/*console query
-		 * db.listened.aggregate( [{ $group: { _id: "$trackId", total: { $sum: 1 } } }, { $group: { _id: "null", total: { $sum: "$total" } } } ])
+		/*
+		 * console query
+		 * db.artists.aggregate( [ { $project: { "_id":1, "artistId": 1, "total": { $size: "$songs" } } },{$group:{_id: "null",tot: { $sum: "$total" }}} ] )
 		 */
-		
-		Document groupBytrackId = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));			
-		Document sum = new Document("$group", new Document("_id", "null").append("total", new Document("$sum", "$total")));			
+		Document groupByTracks = new Document("$project", new Document("artistId", 1).append("total", new Document("$size", "$songs")));
+		Document sum = new Document("$group", new Document("_id", null).append("tot", new Document("$sum", "$total")));
 
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupBytrackId,sum));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).aggregate(asList(groupByTracks,sum));
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 
-				writer.write(document.get("total").toString());
+				writer.write(document.get("tot").toString());
 
 			}
 		});
@@ -199,13 +199,13 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		long artist = db.getCollection(COLLECTIONARTISTS).count();
 		long user = db.getCollection(COLLECTIONUSERS).count();
 		
-		Document groupBytrackId = new Document("$group", new Document("_id", "$trackId").append("total", new Document("$sum", 1)));			
-		Document sum = new Document("$group", new Document("_id", "null").append("total", new Document("$sum", "$total")));			
+		Document groupByTracks = new Document("$project", new Document("artistId", 1).append("total", new Document("$size", "$songs")));
+		Document sum = new Document("$group", new Document("_id", null).append("tot", new Document("$sum", "$total")));
 
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupBytrackId,sum));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).aggregate(asList(groupByTracks,sum));
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
-				Long track = Long.valueOf(document.get("total").toString());
+				Long track = Long.valueOf(document.get("tot").toString());
 				long total = artist+user+track;
 				writer.write(Long.toString(total));	
 
