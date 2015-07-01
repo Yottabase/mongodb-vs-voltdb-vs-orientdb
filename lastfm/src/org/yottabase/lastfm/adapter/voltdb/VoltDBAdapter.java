@@ -75,29 +75,29 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		String dql = new StringBuilder()
 			//crea tabella User
 			.append("CREATE TABLE User ( ")
-			.append("Code VARCHAR NOT NULL, Gender VARCHAR(1), Age TINYINT, Country VARCHAR, SignupDate TIMESTAMP,")
+			.append("Code VARCHAR(40) NOT NULL, Gender VARCHAR(1), Age TINYINT, Country VARCHAR(50), SignupDate TIMESTAMP,")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
 			//crea tabella Artist
 			.append("CREATE TABLE Artist ( ")
-			.append("Code VARCHAR NOT NULL, Name VARCHAR,")
+			.append("Code VARCHAR(40) NOT NULL, Name VARCHAR(200),")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
 			//crea tabella Track
 			.append("CREATE TABLE Track ( ")
-			.append("Code VARCHAR NOT NULL, Name VARCHAR, ArtistCode VARCHAR,")
+			.append("Code VARCHAR(40) NOT NULL, Name VARCHAR(200), ArtistCode VARCHAR(40),")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
 			.append("CREATE INDEX Track_ArtistCode ON Track ( ArtistCode );")
 			
 			//crea tabella ListenedTrack
 			.append("CREATE TABLE ListenedTrack ( ")
-			.append("Time TIMESTAMP, TrackCode VARCHAR, UserCode VARCHAR,")
+			.append("Time TIMESTAMP, TrackCode VARCHAR(40), UserCode VARCHAR(15),")
 			.append("PRIMARY KEY (Time, TrackCode, UserCode)")
 			.append(");")
-			.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );")
+			//.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );") unusued
 			.append("CREATE INDEX ListenedTrack_UserCode ON ListenedTrack ( UserCode );")
 			
 			.toString();
