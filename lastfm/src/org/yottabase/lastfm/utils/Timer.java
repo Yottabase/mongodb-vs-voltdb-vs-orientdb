@@ -51,12 +51,15 @@ public class Timer {
 	} 
 	
 	public String toString(){
+		
+		int seconds = (int) (this.elapsedTime / 1000) % 60 ;
+		int minutes = (int) ((this.elapsedTime / (1000*60)) % 60);
+		int hours   = (int) (this.elapsedTime / (1000*60*60));
+		
 		return String.format("%s: %dms [%dh %dm %ds]",
 			this.timerName,
 			this.elapsedTime,
-			Math.round(this.elapsedTime/1000/60/60),
-			Math.round(this.elapsedTime/1000/60 - (Math.round(this.elapsedTime/1000/60/60) * 60)),
-			Math.round(this.elapsedTime/1000) - (Math.round(this.elapsedTime/1000/60) * 60) - (Math.round(this.elapsedTime/1000/60/60) * 60)
+			hours, minutes, seconds
 		);
 	}
 
