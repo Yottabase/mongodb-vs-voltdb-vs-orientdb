@@ -308,7 +308,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		Document sort = new Document("$sort", new Document("total",order));
 		Document limit = new Document("$limit", n);
 
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,groupByUser,sort,limit));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,groupByUser,sort,limit)).allowDiskUse(true);
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 
@@ -352,7 +352,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		Document sort = new Document("$sort", new Document("total",order));
 		Document limit = new Document("$limit", n);
 
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,groupByUser,sort,limit));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(groupByTracks,groupByUser,sort,limit)).allowDiskUse(true);
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 
