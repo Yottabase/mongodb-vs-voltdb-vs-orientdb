@@ -251,7 +251,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	        			table.getString(1), 
 	        			Long.toString(table.getLong(2)),
 	        			table.getString(3),
-	        			"data"
+	        			table.getTimestampAsSqlTimestamp(4).toString()
 		        	);
 		        }
 			}
@@ -267,7 +267,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				VoltTable table = response.getResults()[0];
 		        while (table.advanceRow()) {
-		        	this.writer.write(table.getString(0), table.getString(1));
+		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
 		        }
 			}
 		} catch (IOException | ProcCallException e) {
@@ -282,7 +282,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				VoltTable table = response.getResults()[0];
 		        while (table.advanceRow()) {
-		        	this.writer.write(table.getString(0), table.getString(1));
+		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
 		        }
 				
 			}
@@ -334,7 +334,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	        			table.getString(1), 
 	        			Long.toString(table.getLong(2)),
 	        			table.getString(3),
-	        			"data"
+	        			table.getTimestampAsSqlTimestamp(4).toString()
 		        	);
 		        }
 				
