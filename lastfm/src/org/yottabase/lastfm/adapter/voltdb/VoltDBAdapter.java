@@ -58,13 +58,14 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 		//pulisce il database
 		String dqlClean = new StringBuilder()
+			.append("DROP VIEW TrackChart IF EXISTS; ")
 			.append("DROP TABLE User IF EXISTS; ")
 			.append("DROP TABLE Artist IF EXISTS; ")
 			.append("DROP TABLE Track IF EXISTS; ")
 			.append("DROP TABLE ListenedTrack IF EXISTS; ")
-			.append("DROP TABLE ListenedTrack_TrackCode IF EXISTS; ")
-			.append("DROP TABLE ListenedTrack_UserCode IF EXISTS; ")
-			.append("DROP TABLE Track_ArtistCode IF EXISTS; ")
+			.append("DROP INDEX ListenedTrack_TrackCode IF EXISTS; ")
+			.append("DROP INDEX ListenedTrack_UserCode IF EXISTS; ")
+			.append("DROP INDEX Track_ArtistCode IF EXISTS; ")
 			.toString();
 		
 		for (int i = 0; i < proceduresNames.length; i++) {
@@ -99,6 +100,9 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			.append(");")
 			//.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );") unusued
 			.append("CREATE INDEX ListenedTrack_UserCode ON ListenedTrack ( UserCode );")
+			
+			//crea vista TrackChart
+			.append("CREATE VIEW TrackChart (code, num) AS SELECT l.trackCode, COUNT(*) FROM listenedTrack l GROUP BY l.trackCode")
 			
 			.toString();
 		
