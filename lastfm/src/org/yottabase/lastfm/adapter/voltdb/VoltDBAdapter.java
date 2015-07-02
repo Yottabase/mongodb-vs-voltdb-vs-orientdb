@@ -94,8 +94,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			
 			//crea tabella ListenedTrack
 			.append("CREATE TABLE ListenedTrack ( ")
-			.append("Time TIMESTAMP, TrackCode VARCHAR(40), UserCode VARCHAR(15),")
-			.append("PRIMARY KEY (Time, TrackCode, UserCode)")
+			.append("Time TIMESTAMP, TrackCode VARCHAR(40), UserCode VARCHAR(15)")
+			//.append("PRIMARY KEY (Time, TrackCode, UserCode)") unusued
 			.append(");")
 			//.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );") unusued
 			.append("CREATE INDEX ListenedTrack_UserCode ON ListenedTrack ( UserCode );")
