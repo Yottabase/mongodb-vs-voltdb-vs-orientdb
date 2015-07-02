@@ -8,10 +8,10 @@ import org.voltdb.VoltTable;
 public class ArtistsChart extends VoltProcedure{
 	
 	final String query = 
-			"SELECT TOP ? a.code, a.name, COUNT(*) as num FROM listenedTrack l "
-			+ "LEFT JOIN track t ON (l.trackCode = t.code) "
-			+ "LEFT JOIN artist a ON (a.code = t.artistCode) "
-			+ "GROUP BY a.code, a.name ORDER BY num ";
+			"SELECT TOP ? a.code, a.name, SUM(tc.num) as num " +
+			"FROM trackChart tc LEFT JOIN track t ON (tc.code=t.code) " +
+			"LEFT JOIN artist a ON (t.artistCode = a.code) " +
+			"GROUP BY a.code, a.name ORDER BY num ";
 	
 	final SQLStmt chartAsc = new SQLStmt(query + " ASC");
 	final SQLStmt chartDesc = new SQLStmt( query + " DESC");
