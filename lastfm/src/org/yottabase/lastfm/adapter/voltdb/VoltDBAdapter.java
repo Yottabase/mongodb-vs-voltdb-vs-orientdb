@@ -81,7 +81,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			
 			//crea tabella Artist
 			.append("CREATE TABLE Artist ( ")
-			.append("Code VARCHAR(40) NOT NULL, Name VARCHAR(200),")
+			.append("Code VARCHAR(40) NOT NULL, Name VARCHAR(280),")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
