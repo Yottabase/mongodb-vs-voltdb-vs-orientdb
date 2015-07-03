@@ -324,7 +324,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 						@SuppressWarnings("unchecked")
 						Document documentOutput = ( ( (ArrayList<Document>)document2.get("songs") ).get(0));
 
-						String output= documentOutput.getString("trackId")  + documentOutput.get("trackName")  + document.get("total") ;
+						String output= documentOutput.getString("trackId").toString()  + "	" + documentOutput.get("trackName")  + "	" + document.get("total") ;
 
 						writer.write(output);
 
@@ -367,7 +367,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 				iterableArtist.forEach(new Block<Document>() {
 					public void apply(final Document document2) {
 
-						String output = document2.get("artistId").toString() + document2.get("artistName").toString() +  document.get("total").toString();
+						String output = document2.get("artistId").toString() + "	"+ document2.get("artistName").toString() + "	" +  document.get("total").toString();
 
 						writer.write(output);
 
@@ -384,7 +384,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		FindIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).find(query);
 		
 		if(iterable.first() != null)
-			this.writer.write(iterable.first().get("artistId").toString() + iterable.first().get("artistName").toString());
+			this.writer.write(iterable.first().get("artistId").toString(),iterable.first().get("artistName").toString());
 
 	}
 
@@ -394,7 +394,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		FindIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).find(new Document("artistName", artistName));
 
 		if(iterable.first() != null)
-			this.writer.write(iterable.first().get("artistId").toString() + iterable.first().get("artistName").toString());
+			this.writer.write(iterable.first().get("artistId").toString(), iterable.first().get("artistName").toString());
 
 	}
 
@@ -408,7 +408,8 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		iterable.forEach(new Block<Document>() {
 			@Override
 			public void apply(final Document document) {
-				writer.write(document.get("code").toString() + document.get("gender") + document.get("age") + document.get("country") + document.get("singupDate") );
+				String output = document.get("code").toString() + " 	" + document.get("gender") + " 		" + document.get("age") + " 	" + document.get("country") + " 	" + document.get("singupDate");
+				writer.write(output);
 			}
 		});
 
@@ -428,7 +429,7 @@ public class MongoDBAdapter extends AbstractDBFacade {
 			public void apply(final Document document) {
 				Document documentOutput = (Document) document.get("songs");
 
-				writer.write(documentOutput.get("trackId").toString() + documentOutput.get("trackName"));
+				writer.write(documentOutput.get("trackId").toString(), documentOutput.get("trackName").toString());
 
 			}
 		});
@@ -440,17 +441,13 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		// db.users.aggregate( [{ $group: { _id: "$country", total: { $sum: 1 } } } ])
 
 		Document groupByCountry = new Document("$group", new Document("_id", "$country").append("total", new Document("$sum",1)));
-		Document sort = new Document("$sort", new Document("total",-1));
-		Document limit = new Document("$limit", 10);
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).aggregate(asList(groupByCountry,sort,limit));
+
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).aggregate(asList(groupByCountry));
 
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
-				if(document.get("_id") != null){
-
-					String output = document.get("_id").toString() + "   " + document.get("total").toString();
-					writer.write(output);
-				}
+				if(document.get("_id") != null)
+					writer.write(document.get("_id").toString() ,document.get("total").toString());
 
 			}
 		});
@@ -461,12 +458,9 @@ public class MongoDBAdapter extends AbstractDBFacade {
 		/*console query
 		 * db.users.aggregate( [ { $group: { _id: {"country": "$country","gender": "$gender"}, total: { $sum: 1 } } } ])
 		 */
-
 		Document groupByTracks = new Document("$group", new Document("_id", new Document("country","$country").append("gender", "$gender")).append("total", new Document("$sum", 1)));
-		Document sort = new Document("$sort", new Document("total",-1));
-		Document limit = new Document("$limit", 10);
 
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).aggregate(asList(groupByTracks,sort,limit));
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONUSERS).aggregate(asList(groupByTracks));
 		iterable.forEach(new Block<Document>() {
 			public void apply(final Document document) {
 
@@ -474,10 +468,8 @@ public class MongoDBAdapter extends AbstractDBFacade {
 				String country = (String) parcialOutput.get("country");
 				String gender = (String) parcialOutput.get("gender");
 
-				if(country != null && gender != null ){
-					String output = country  + gender + document.get("total");
-					writer.write(output);
-				}
+				if(country != null && gender != null )
+					writer.write(country,gender,document.get("total").toString());
 
 			}
 		});	
