@@ -251,7 +251,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	        			table.getString(1), 
 	        			Long.toString(table.getLong(2)),
 	        			table.getString(3),
-	        			table.getTimestampAsSqlTimestamp(4).toString()
+	        			table.getTimestampAsSqlTimestamp(4).toString(),
+	        			Long.toString(table.getLong(5))
 		        	);
 		        }
 			}
