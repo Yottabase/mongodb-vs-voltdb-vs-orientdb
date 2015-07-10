@@ -58,13 +58,14 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 		//pulisce il database
 		String dqlClean = new StringBuilder()
+			.append("DROP VIEW TrackChart IF EXISTS; ")
 			.append("DROP TABLE User IF EXISTS; ")
 			.append("DROP TABLE Artist IF EXISTS; ")
 			.append("DROP TABLE Track IF EXISTS; ")
 			.append("DROP TABLE ListenedTrack IF EXISTS; ")
-			.append("DROP TABLE ListenedTrack_TrackCode IF EXISTS; ")
-			.append("DROP TABLE ListenedTrack_UserCode IF EXISTS; ")
-			.append("DROP TABLE Track_ArtistCode IF EXISTS; ")
+			.append("DROP INDEX ListenedTrack_TrackCode IF EXISTS; ")
+			.append("DROP INDEX ListenedTrack_UserCode IF EXISTS; ")
+			.append("DROP INDEX Track_ArtistCode IF EXISTS; ")
 			.toString();
 		
 		for (int i = 0; i < proceduresNames.length; i++) {
@@ -75,30 +76,33 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		String dql = new StringBuilder()
 			//crea tabella User
 			.append("CREATE TABLE User ( ")
-			.append("Code VARCHAR NOT NULL, Gender VARCHAR(1), Age TINYINT, Country VARCHAR, SignupDate TIMESTAMP,")
+			.append("Code VARCHAR(40) NOT NULL, Gender VARCHAR(1), Age TINYINT, Country VARCHAR(50), SignupDate TIMESTAMP,")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
 			//crea tabella Artist
 			.append("CREATE TABLE Artist ( ")
-			.append("Code VARCHAR NOT NULL, Name VARCHAR,")
+			.append("Code VARCHAR(40) NOT NULL, Name VARCHAR(280),")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
 			
 			//crea tabella Track
 			.append("CREATE TABLE Track ( ")
-			.append("Code VARCHAR NOT NULL, Name VARCHAR, ArtistCode VARCHAR,")
+			.append("Code VARCHAR(40) NOT NULL, Name VARCHAR(280), ArtistCode VARCHAR(40),")
 			.append("PRIMARY KEY (Code)")
 			.append(");")
 			.append("CREATE INDEX Track_ArtistCode ON Track ( ArtistCode );")
 			
 			//crea tabella ListenedTrack
 			.append("CREATE TABLE ListenedTrack ( ")
-			.append("Time TIMESTAMP, TrackCode VARCHAR, UserCode VARCHAR,")
-			.append("PRIMARY KEY (Time, TrackCode, UserCode)")
+			.append("Time TIMESTAMP, TrackCode VARCHAR(40), UserCode VARCHAR(15)")
+			//.append("PRIMARY KEY (Time, TrackCode, UserCode)") unusued
 			.append(");")
-			.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );")
+			//.append("CREATE INDEX ListenedTrack_TrackCode ON ListenedTrack ( TrackCode );") unusued
 			.append("CREATE INDEX ListenedTrack_UserCode ON ListenedTrack ( UserCode );")
+			
+			//crea vista TrackChart
+			.append("CREATE VIEW TrackChart (code, num) AS SELECT l.trackCode, COUNT(*) FROM listenedTrack l GROUP BY l.trackCode")
 			
 			.toString();
 		
@@ -171,7 +175,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	@Override
 	public void countTracks() {
 		try {
-			ClientResponse response = this.client.callProcedure( "Count",	"Artists" );
+			ClientResponse response = this.client.callProcedure( "Count",	"Tracks" );
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				long count = response.getResults()[0].asScalarLong();
 				this.writer.write(Long.toString(count));
@@ -247,7 +251,8 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	        			table.getString(1), 
 	        			Long.toString(table.getLong(2)),
 	        			table.getString(3),
-	        			"data"
+	        			table.getTimestampAsSqlTimestamp(4).toString(),
+	        			Long.toString(table.getLong(5))
 		        	);
 		        }
 			}
@@ -263,7 +268,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				VoltTable table = response.getResults()[0];
 		        while (table.advanceRow()) {
-		        	this.writer.write(table.getString(0), table.getString(1));
+		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
 		        }
 			}
 		} catch (IOException | ProcCallException e) {
@@ -278,7 +283,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 			if (response.getStatus() == ClientResponse.SUCCESS) {
 				VoltTable table = response.getResults()[0];
 		        while (table.advanceRow()) {
-		        	this.writer.write(table.getString(0), table.getString(1));
+		        	this.writer.write(table.getString(0), table.getString(1), Long.toString(table.getLong(2)));
 		        }
 				
 			}
@@ -330,7 +335,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	        			table.getString(1), 
 	        			Long.toString(table.getLong(2)),
 	        			table.getString(3),
-	        			"data"
+	        			table.getTimestampAsSqlTimestamp(4).toString()
 		        	);
 		        }
 				
