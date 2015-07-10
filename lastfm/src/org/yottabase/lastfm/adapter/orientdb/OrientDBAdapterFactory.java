@@ -24,8 +24,9 @@ public class OrientDBAdapterFactory implements DBFacadeFactory {
 		String password 	= properties.get(	PREFIX + "password"		);
 		String url = storage + ":" + (storage.equals("remote") ? host : "") + db_directory;
 		
+		OServerAdmin server = null;
 		try {
-			OServerAdmin server = new OServerAdmin(url).connect(username, password);
+			server = new OServerAdmin(url).connect(username, password);
 			
 			if (server.existsDatabase("plocal"))
 				server.dropDatabase("plocal");
@@ -33,10 +34,11 @@ public class OrientDBAdapterFactory implements DBFacadeFactory {
 			if (!server.existsDatabase("plocal"))
 				server.createDatabase("graph", "plocal");
 				
-			server.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			server.close();
 		}
 		
 		// db as a graph

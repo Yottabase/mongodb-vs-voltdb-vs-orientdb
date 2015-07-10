@@ -181,9 +181,9 @@ public class BenchmarkMain {
 
 
 			//tracksSungByArtist
-			methodElapsedTime = new Timer(adapterName + SEPARATOR + "tracksSungByArtist(3d05eb8b-1644-4143-9a61-b28e33c4d85f)", true);
+			methodElapsedTime = new Timer(adapterName + SEPARATOR + "oneTrackListenedByUser(user_000581)", true);
 			writer.writeHeader("track_code", "track_name");
-			dbAdapter.tracksSungByArtist("3d05eb8b-1644-4143-9a61-b28e33c4d85f");
+			dbAdapter.oneTrackListenedByUser("user_000581");
 			methodElapsedTime.pauseAndPrint();
 
 

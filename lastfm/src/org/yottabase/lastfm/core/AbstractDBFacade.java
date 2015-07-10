@@ -113,10 +113,10 @@ public abstract class AbstractDBFacade {
 	public abstract void usersByAgeRange(int lowerBound, int upperBound);
 	
 	/**
-	 * Le tracce cantate dall'artista specificato
-	 * @param artistCode è il codice dell'artista
+	 * La prima traccia ascoltata dall'utente specificato (rispetto ad ordine qualunque)
+	 * @param userCode è il codice dell'utente
 	 */
-	public abstract void tracksSungByArtist(String artistCode);
+	public abstract void oneTrackListenedByUser(String userCode);
 	
 	/**
 	 * Il coteggio degli utenti registrati per ogni differente paese

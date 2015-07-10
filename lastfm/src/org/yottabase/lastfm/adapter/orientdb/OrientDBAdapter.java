@@ -249,15 +249,14 @@ public class OrientDBAdapter extends AbstractDBFacade {
 	}
 
 	@Override
-	public void tracksSungByArtist(String artistCode) {
-		Vertex artist = graph.getVertexByKey("Artist.artistID", artistCode);
-		Iterable<Vertex> artistTracks = artist.getVertices(Direction.OUT, "Sing");
+	public void oneTrackListenedByUser(String userCode) {
+		Vertex user = graph.getVertexByKey("User.userID", userCode);
+		Iterable<Vertex> listenedTracks = user.getVertices(Direction.OUT, "Listen");
+		Vertex oneTrack = listenedTracks.iterator().next();
 		
-		for (Vertex track : artistTracks) {
-			writer.write(
-					track.getProperty("trackID"), 
-					track.getProperty("name") );
-		}
+		writer.write(
+				oneTrack.getProperty("trackID"), 
+				oneTrack.getProperty("name") );
 	}
 
 	@Override

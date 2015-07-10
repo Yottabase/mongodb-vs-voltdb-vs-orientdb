@@ -401,23 +401,25 @@ public class MongoDBAdapter extends AbstractDBFacade {
 	}
 
 	@Override
-	public void tracksSungByArtist(String artistCode) {
+	public void oneTrackListenedByUser(String userCode) {
+		// TODO
+		
 		// db.artists.aggregate( [ { $match: { artistId: '6685bdd9-37f3-4323-8f7c-0e7bb9103e6d' } },{ $unwind : "$songs" },{ $project: { "_id":0, "songs": 1 } }])
 
-		Document match = new Document("$match", new Document("artistId", artistCode));
-		Document unwind = new Document("$unwind", "$songs");
-		Document project = new Document("$project", new Document("_id", 0).append("songs", 1));
-
-		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).aggregate(asList(match,unwind,project));
-
-		iterable.forEach(new Block<Document>() {
-			public void apply(final Document document) {
-				Document documentOutput = (Document) document.get("songs");
-
-				writer.write(documentOutput.get("trackId").toString() + documentOutput.get("trackName"));
-
-			}
-		});
+//		Document match = new Document("$match", new Document("artistId", artistCode));
+//		Document unwind = new Document("$unwind", "$songs");
+//		Document project = new Document("$project", new Document("_id", 0).append("songs", 1));
+//
+//		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).aggregate(asList(match,unwind,project));
+//
+//		iterable.forEach(new Block<Document>() {
+//			public void apply(final Document document) {
+//				Document documentOutput = (Document) document.get("songs");
+//
+//				writer.write(documentOutput.get("trackId").toString() + documentOutput.get("trackName"));
+//
+//			}
+//		});
 
 	}
 

@@ -117,7 +117,7 @@ public class NoopAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void tracksSungByArtist(String artistCode) {
+	public void oneTrackListenedByUser(String userCode) {
 		// TODO Auto-generated method stub
 		
 	}

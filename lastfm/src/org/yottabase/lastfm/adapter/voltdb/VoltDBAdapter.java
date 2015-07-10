@@ -342,18 +342,20 @@ public class VoltDBAdapter extends AbstractDBFacade{
 	}
 
 	@Override
-	public void tracksSungByArtist(String artistCode) {
-		try {
-			ClientResponse response = this.client.callProcedure( "GetTracksByArtist", artistCode );
-			if (response.getStatus() == ClientResponse.SUCCESS) {
-				VoltTable table = response.getResults()[0];
-		        while (table.advanceRow()) {
-		        	this.writer.write(table.getString(0), table.getString(1));
-		        }
-			}
-		} catch (IOException | ProcCallException e) {
-			e.printStackTrace();
-		}
+	public void oneTrackListenedByUser(String userCode) {
+		// TODO
+		
+//		try {
+//			ClientResponse response = this.client.callProcedure( "GetTracksByArtist", artistCode );
+//			if (response.getStatus() == ClientResponse.SUCCESS) {
+//				VoltTable table = response.getResults()[0];
+//		        while (table.advanceRow()) {
+//		        	this.writer.write(table.getString(0), table.getString(1));
+//		        }
+//			}
+//		} catch (IOException | ProcCallException e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 
