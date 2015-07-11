@@ -20,6 +20,7 @@ public class VoltDBAdapterFactory implements DBFacadeFactory{
 		String username = properties.get("voltdb.username");
 		String password = properties.get("voltdb.password");
 		String procedureFilename = properties.get("voltdb.procedure_filename");
+		boolean asyncMode = properties.get("voltdb.async_mode").equals("true");
 		
 		try {
 			
@@ -27,9 +28,15 @@ public class VoltDBAdapterFactory implements DBFacadeFactory{
 			client.createConnection(host);
 			
 			if(procedureFilename == null){
-				facade = new VoltDBAdapter(client);	
+				if(asyncMode)
+					facade = new VoltDBAdapterAsyncInsert(client);
+				else
+					facade = new VoltDBAdapter(client);	
 			}else{
-				facade = new VoltDBAdapter(client, procedureFilename);
+				if(asyncMode)
+					facade = new VoltDBAdapterAsyncInsert(client, procedureFilename);
+				else
+					facade = new VoltDBAdapter(client, procedureFilename);
 			}
 			
 		} catch (IOException e) {
