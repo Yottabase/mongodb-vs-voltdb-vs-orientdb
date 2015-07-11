@@ -12,7 +12,7 @@ import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberListenedTracks
 import org.yottabase.lastfm.adapter.voltdb.procedure.AverageNumberSungTracksPerArtist;
 import org.yottabase.lastfm.adapter.voltdb.procedure.Count;
 import org.yottabase.lastfm.adapter.voltdb.procedure.GetArtist;
-import org.yottabase.lastfm.adapter.voltdb.procedure.GetTracksByArtist;
+import org.yottabase.lastfm.adapter.voltdb.procedure.OneTrackListenedByUser;
 import org.yottabase.lastfm.adapter.voltdb.procedure.InsertListenedTrackRecursive;
 import org.yottabase.lastfm.adapter.voltdb.procedure.TracksChart;
 import org.yottabase.lastfm.adapter.voltdb.procedure.UsersByAgeRange;
@@ -38,7 +38,7 @@ public class VoltDBAdapter extends AbstractDBFacade{
 		ArtistsChart.class.getCanonicalName(),
 		GetArtist.class.getCanonicalName(),
 		UsersByAgeRange.class.getCanonicalName(),
-		GetTracksByArtist.class.getCanonicalName(),
+		OneTrackListenedByUser.class.getCanonicalName(),
 		UsersStats.class.getCanonicalName(),
 	};
 	
@@ -348,19 +348,17 @@ public class VoltDBAdapter extends AbstractDBFacade{
 
 	@Override
 	public void oneTrackListenedByUser(String userCode) {
-		// TODO
-		
-//		try {
-//			ClientResponse response = this.client.callProcedure( "GetTracksByArtist", artistCode );
-//			if (response.getStatus() == ClientResponse.SUCCESS) {
-//				VoltTable table = response.getResults()[0];
-//		        while (table.advanceRow()) {
-//		        	this.writer.write(table.getString(0), table.getString(1));
-//		        }
-//			}
-//		} catch (IOException | ProcCallException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			ClientResponse response = this.client.callProcedure( "OneTrackListenedByUser", userCode );
+			if (response.getStatus() == ClientResponse.SUCCESS) {
+				VoltTable table = response.getResults()[0];
+		        while (table.advanceRow()) {
+		        	this.writer.write(table.getString(0), table.getString(1));
+		        }
+			}
+		} catch (IOException | ProcCallException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
