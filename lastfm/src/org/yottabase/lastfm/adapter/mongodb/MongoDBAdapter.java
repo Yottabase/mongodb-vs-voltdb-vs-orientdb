@@ -417,24 +417,31 @@ public class MongoDBAdapter extends AbstractDBFacade {
 
 	@Override
 	public void oneTrackListenedByUser(String userCode) {
-		// TODO
 		
-		// db.artists.aggregate( [ { $match: { artistId: '6685bdd9-37f3-4323-8f7c-0e7bb9103e6d' } },{ $unwind : "$songs" },{ $project: { "_id":0, "songs": 1 } }])
+		//db.listened.aggregate( [ { $match: { code: 'user_000581' } },{ $project: { "_id":0, "trackId": 1 } }])
+		
+		Document match = new Document("$match", new Document("code", userCode));
+		Document project = new Document("$project", new Document("_id", 0).append("trackId", 1));
 
-//		Document match = new Document("$match", new Document("artistId", artistCode));
-//		Document unwind = new Document("$unwind", "$songs");
-//		Document project = new Document("$project", new Document("_id", 0).append("songs", 1));
-//
-//		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONARTISTS).aggregate(asList(match,unwind,project));
-//
-//		iterable.forEach(new Block<Document>() {
-//			public void apply(final Document document) {
-//				Document documentOutput = (Document) document.get("songs");
-//
-//				writer.write(documentOutput.get("trackId").toString() + documentOutput.get("trackName"));
-//
-//			}
-//		});
+		AggregateIterable<Document> iterable = db.getCollection(COLLECTIONLISTENED).aggregate(asList(match,project));
+		
+		String trackId = iterable.first().get("trackId").toString();
+		
+		//db.artists.find({"songs.trackId":"29bd015c59990a0ab269f31a6c2c5c8e56862359"}, {"songs.$":1})
+		Document trackNameJoin = new Document("songs.trackId", trackId);
+		Document projectJoin = new Document("_id", 0).append("songs.$", 1);
+		FindIterable<Document> iterable2 = db.getCollection(COLLECTIONARTISTS).find(trackNameJoin).projection(projectJoin);
+
+		iterable2.forEach(new Block<Document>() {
+			public void apply(final Document document2) {
+			
+				@SuppressWarnings("unchecked")
+				Document documentOutput = ( ( (ArrayList<Document>)document2.get("songs") ).get(0));				
+				
+				writer.write(documentOutput.get("trackId").toString(), documentOutput.get("trackName").toString());
+
+			}
+		});
 
 	}
 
